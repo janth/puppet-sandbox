@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define :client1 do |client1_config|
      client1_config.vm.box = "client1"
-     client1_config.vm.box_url = "~/EVRY/centos-6.4.box"
+     client1_config.vm.box_url = "~/EVRY/Boxes/centos-6.4.box"
      client1_config.vm.hostname = "client1.home.lan"
 
      client1_config.vm.provider :virtualbox do |vb|
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define :client2 do |client2_config|
      client2_config.vm.box = "client2"
-     client2_config.vm.box_url = "~/EVRY/centos-6.4.box"
+     client2_config.vm.box_url = "~/EVRY/Boxes/centos-6.4.box"
      client2_config.vm.hostname = "client2.home.lan"
 
      client2_config.vm.provider :virtualbox do |vb|
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define :puppetmaster do |puppetmaster_config|
      puppetmaster_config.vm.box = "puppetmaster"
-     puppetmaster_config.vm.box_url = "~/EVRY/centos-6.4.box"
+     puppetmaster_config.vm.box_url = "~/EVRY/Boxes/centos-6.4.box"
      puppetmaster_config.vm.hostname = "puppetmaster.home.lan"
 
      puppetmaster_config.vm.provider :virtualbox do |vb|
@@ -105,5 +105,18 @@ Vagrant.configure("2") do |config|
   # config.vm.provision :puppet do |puppet|
   #   puppet.manifests_path = File.expand_path("../manifests", __FILE__)
   # end
+
+  ## Puppet workshop:
+  ## Enable Puppet --debug setting on provisioning? Used from command line with DEBUG=true vagrant up nodeX
+  #DEBUG = ENV['DEBUG'] ? '--debug' : ''
+  #config.vm.provision :puppet do |puppet|
+  #  puppet.manifests_path = "site"
+  #  puppet.manifest_file  = "site.pp"
+  #  puppet.module_path    = [ "modules", "site" ]
+  #  puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
+  #  puppet.facter = {
+  #     "is_vagrant" => true,
+  #  }
+  #end
 
 end
