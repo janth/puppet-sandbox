@@ -1,0 +1,8 @@
+# read by modules-update
+# whitespace separated
+# giturl module-path release-hash
+
+git://github.com/stahnma/puppet-module-epel.git                modules/epel               4fc5b13bc3
+git://github.com/stahnma/puppet-module-puppetlabs_yum.git      modules/puppetlabs_yum     15d87ae0c5
+git://github.com/ripienaar/puppet-concat.git                   modules/concat             8c9615dd4e
+git://github.com/puppetlabs/puppetlabs-stdlib.git              modules/stdlib             6f9361e383

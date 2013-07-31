@@ -5,6 +5,7 @@
 
 .librarian/
 .tmp/
-modules/
 .vagrant
 Puppetfile.lock
+
+modules/
