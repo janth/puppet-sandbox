@@ -74,6 +74,9 @@ while read -a line ; do
 done < ${list}
 
  : << X
+
+mkdir -p modules hieradata/nodes site/sitelib
+
 # read by ../modules-update.sh
 # whitespace separated
 # giturl module-path release-hash
