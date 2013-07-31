@@ -1,4 +1,4 @@
-### EVRY lab VirtualBox + Vagrant + Puppet with puppetmaster and clients {oel,sol11}
+## EVRY lab VirtualBox + Vagrant + Puppet with puppetmaster and clients {oel,sol11}
 
 Author: Jan Thomas
 
@@ -7,10 +7,23 @@ To valg:
 * Enten hent http://downloads.puppetlabs.com/puppet/puppet.vim og legg i din ~/.vim/syntax
 * Eller https://github.com/rodjek/vim-puppet (har bedre keyword farging)
 som er enklest hvis en bruker vim bundle/vundle/pathogen: 
- 0. (Valgfritt) les mer på https://github.com/rodjek/vim-puppet
+ 0. (Valgfritt) les mer på https://github.com/gmarik/vundle
  1. git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
  2. vim ~/.vimrc
- 3. legg til `Bundle 'rodjek/vim-puppet'`
+ 3. legg til følgende:
+ ```
+ set nocompatible               " be iMproved
+ filetype off                   " required!
+
+ set rtp+=~/.vim/bundle/vundle/
+ call vundle#rc()
+
+ " Required: Let Vundle manage Vundle 
+ Bundle 'gmarik/vundle'
+ Bundle 'rodjek/vim-puppet'
+ filetype plugin indent on     " required!
+ ```
+ 4. `vim +BundleInstall +qall`
 
 ### links
 * MultiVM: https://gist.github.com/dlutzy/2469037
