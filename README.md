@@ -10,7 +10,7 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
  0. (Valgfritt) les mer på https://github.com/rodjek/vim-puppet
  1. git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
  2. vim ~/.vimrc
- 3. legg til Bundle 'rodjek/vim-puppet'
+ 3. legg til `Bundle 'rodjek/vim-puppet'`
 
 ### links
 * MultiVM: https://gist.github.com/dlutzy/2469037
