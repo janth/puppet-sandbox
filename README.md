@@ -8,6 +8,7 @@ To valg:
 * Eller https://github.com/rodjek/vim-puppet (har bedre keyword farging)
 som er enklest hvis en bruker vim bundle/vundle/pathogen: 
  * (Valgfritt) les mer på https://github.com/rodjek/vim-puppet
+
    git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
    vim ~/.vimrc
    legg til Bundle 'rodjek/vim-puppet'
