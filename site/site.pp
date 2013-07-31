@@ -46,4 +46,33 @@ $ sudo puppet resource service puppet ensure=running enable=true
 $ sudo puppet resource service puppetmaster ensure=running enable=true
 add vagrant to group puppet; read /var/log/puppet without sudo
   */
+  notify {"I'm notifying you.":}
+
+  /*
+
+    $apache = $operatingsystem ? {
+      centos                => 'httpd',
+      redhat                => 'httpd',
+      /(?i)(ubuntu|debian)/ => 'apache2',
+      default               => undef,
+    }
+
+# /root/examples/motd.pp
+
+    file {'motd':
+      ensure  => file,
+      path    => '/etc/motd',
+      mode    => 0644,
+      content => "This Learning Puppet VM's IP address is ${ipaddress}. It thinks its
+    hostname is ${fqdn}, but you might not be able to reach it there
+    from your host machine. It is running ${operatingsystem} ${operatingsystemrelease} and
+    Puppet ${puppetversion}.
+    Web console login:
+      URL: https://${ipaddress_eth0}
+      User: puppet@example.com
+      Password: learningpuppet
+    ",
+    }
+
+  */
 }

@@ -71,9 +71,9 @@ Vagrant.configure("2") do |config|
     ## Enable Puppet --debug setting on provisioning? Used from command line with DEBUG=true vagrant up nodeX
     DEBUG = ENV['DEBUG'] ? '--debug' : ''
     puppetmaster_config.vm.provision :puppet do |puppet|
-      puppet.manifests_path = "site"
+      puppet.manifests_path = "site"         # usually manifests/
       puppet.manifest_file  = "site.pp"
-      puppet.module_path    = [ "modules", "site" ]
+      puppet.module_path    = [ "modules", "modules.extern", "site" ]
       puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
       puppet.facter = {
          "is_vagrant" => true,
