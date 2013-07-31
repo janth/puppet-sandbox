@@ -11,18 +11,18 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
  1. git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
  2. vim ~/.vimrc
  3. legg til følgende:
- ```
- set nocompatible               " be iMproved
- filetype off                   " required!
+    ```vim
+    set nocompatible               " be iMproved
+    filetype off                   " required!
 
- set rtp+=~/.vim/bundle/vundle/
- call vundle#rc()
+    set rtp+=~/.vim/bundle/vundle/
+    call vundle#rc()
 
- " Required: Let Vundle manage Vundle 
- Bundle 'gmarik/vundle'
- Bundle 'rodjek/vim-puppet'
- filetype plugin indent on     " required!
- ```
+    " Required: Let Vundle manage Vundle 
+    Bundle 'gmarik/vundle'
+    Bundle 'rodjek/vim-puppet'
+    filetype plugin indent on     " required!
+    ```
  4. `vim +BundleInstall +qall`
 
 ### links
