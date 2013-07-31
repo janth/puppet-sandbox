@@ -24,6 +24,7 @@
 # ENV['VAGRANT_LOG'] = 'debug' # Does not work, probably too late anyway
 domain = 'home.lan'
 box_url = "~/EVRY/Boxes/centos-6.4.box"
+el_base_box = 'CentOS-6.4'
 
 nodes = [
   { :hostname => 'puppetmaster', :ip => '172.16.10.10', :box => 'CentOS-6.4', :ram => 224 },
