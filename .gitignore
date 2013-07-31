@@ -1,11 +1,10 @@
 *~
 *.sw?
-*.un~
-
 
 .librarian/
 .tmp/
-.vagrant
+.vagrant/
+
 Puppetfile.lock
 
 modules/
