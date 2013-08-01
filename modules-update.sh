@@ -39,7 +39,8 @@ logg () {
 }
 
 currentdir=$PWD
-list=site/modules.txt
+list=VagrantConf/modules.txt
+moduledir=VagrantConf/modules
 if [[ ! -r ${list} ]] ; then
    logg "ERROR: Can't read '${list}'"
    exit 1
@@ -55,7 +56,7 @@ while read -a line ; do
   repo=${line[0]}
   module=${repo##*/}
   module=${module%%.*}
-  path=${line[1]}
+  path=${moduledir}/${line[1]}
   ref=${line[2]}
 
   if [[ ! -d ${path} ]]; then

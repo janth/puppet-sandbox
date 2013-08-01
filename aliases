@@ -7,6 +7,7 @@ alias s=ssh
 #alias T='tree -A -U -L 2'
 alias T='tree -A --dirsfirst -L 2'
 
+alias av='alias -m -L "v*" av'
 alias v=vagrant
 alias vb='vagrant box'
 alias vd='vagrant destroy -f'

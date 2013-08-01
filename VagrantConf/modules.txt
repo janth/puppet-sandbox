@@ -1,0 +1,32 @@
+# vim:tw=0:ft=conf
+# read by modules-update
+# whitespace separated
+# giturl module-path release-hash
+
+#git://github.com/stahnma/puppet-module-epel.git                epel               4fc5b13bc3
+git://github.com/stahnma/puppet-module-puppetlabs_yum.git      puppetlabs_yum
+git://github.com/ripienaar/puppet-concat.git                   concat
+
+#git://github.com/puppetlabs/puppetlabs-stdlib.git              stdlib             6f9361e383
+git://github.com/puppetlabs/puppetlabs-stdlib.git              stdlib
+
+git://github.com/puppetlabs/puppetlabs-dashboard.git           dashboard
+
+#git://github.com/dhoppe/puppet-hosts                           hosts
+
+# PuppetDB
+# PuppetDB dependencies : inifile, firewall, postgres
+#git://github.com/puppetlabs-puppet/puppetlabs-puppetdb.git     puppetdb
+git://github.com/puppetlabs/puppetlabs-puppetdb.git            puppetdb
+git://github.com/cprice-puppet/puppetlabs-inifile.git          inifile
+git://github.com/puppetlabs/puppetlabs-firewall.git            firewall
+# PostgreSQL dependencies: stdlib, firewall, apt
+git://github.com/puppetlabs/puppet-postgresql.git              postgresql
+
+git://github.com/puppetlabs/puppetlabs-mysql.git               mysql
+
+# Passenger. Dependencies: apache, ruby
+git://github.com/puppetlabs/puppetlabs-passenger.git           passenger
+git://github.com/puppetlabs/puppetlabs-apache.git              apache
+#https://github.com/puppetlabs/puppetlabs-ruby                  ruby
+git://github.com/puppetlabs/puppetlabs-ruby.git                ruby

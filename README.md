@@ -2,6 +2,20 @@
 
 Author: Jan Thomas
 
+## Om puppet
+
+<a href="http://puppetlabs.com"><abbr title="Puppet automation tool">Puppet</abbr> Labs</a> - The Company behind <abbr title="Puppet automation tool">Puppet</abbr></p>
+<a href="http://puppetlabs.com/puppet/puppet-open-source/"><abbr title="Puppet automation tool">Puppet</abbr></a> - The OpenSource version</p>
+<a href="http://puppetlabs.com/puppet/puppet-enterprise/"><abbr title="Puppet automation tool">Puppet</abbr> Enterprise</a> - The commercial version</p>
+<a href="http://puppetlabs.com/community/overview/">The Community</a> - Active and vibrant</p>
+<a href="http://docs.puppetlabs.com/"><abbr title="Puppet automation tool">Puppet</abbr> Documentation</a> - Main and Official reference</p>
+<abbr title="Puppet automation tool">Puppet</abbr> Modules on: <a href="http://forge.puppetlabs.com">Module Forge</a> and <a href="https://github.com/search?q=puppet">GitHub</a></p>
+Software related to <abbr title="Puppet automation tool">Puppet</abbr>:<br />
+* <a href="http://docs.puppetlabs.com/mcollective/">MCollective</a> - Infrastructure Orchestration framework<br /> <a href="http://docs.puppetlabs.com/hiera/1/">Hiera</a> - Key-value lookup tool where <abbr title="Puppet automation tool">Puppet</abbr> data can be placed<br /> <a href="http://docs.puppetlabs.com/puppetdb/1/">PuppetDB</a> - An Inventory Service and StoredConfigs backend<br /> <a href="http://docs.puppetlabs.com/dashboard/"><abbr title="Puppet automation tool">Puppet</abbr> DashBoard</a> - A <abbr title="Puppet automation tool">Puppet</abbr> <em>Web frontend</em> and External Node Classifier (ENC)<br /> <a href="http://theforeman.org/">The Foreman</a> - A well-known third party provisioning tool and <abbr title="Puppet automation tool">Puppet</abbr> ENC<br /> <a href="http://cloudsmith.github.com/geppetto">Geppetto</a> - A <abbr title="Puppet automation tool">Puppet</abbr> IDE based on Eclipse</p>
+
+
+http://www.puppetcookbook.com/posts/add-a-unix-group.html
+
 ### Puppet + vim
 To valg:
 * Enten hent http://downloads.puppetlabs.com/puppet/puppet.vim og legg i din ~/.vim/syntax
@@ -26,6 +40,8 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
    ```
 
 4. `vim +BundleInstall +qall`
+
+Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppetto/
 
 ### Testing
 * puppet-lint site/site.pp
@@ -54,3 +70,4 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
 * http://stackoverflow.com/questions/13065576/override-vagrant-configuration-settings-locally-per-dev
 * https://github.com/grahamgilbert/vagrant-puppetmaster
 * https://github.com/puppetlabs/puppet-vagrant-boxes
+* https://github.com/fsalum/vagrant-puppet

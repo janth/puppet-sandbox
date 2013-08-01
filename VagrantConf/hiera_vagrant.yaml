@@ -1,0 +1,12 @@
+---
+:hierarchy:
+  #- nodes/%{::verifiedcert}
+  - %{::osfamily}
+  - common
+
+:backends:
+  - yaml
+
+:yaml:
+  :datadir: /vagrant/hieradata
+

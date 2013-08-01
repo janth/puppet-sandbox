@@ -22,7 +22,7 @@
 # https://github.com/puppetlabs/puppet-vagrant-boxes
 
 # ENV['VAGRANT_LOG'] = 'debug' # Does not work, probably too late anyway
-domain = 'home.lan'
+domain = 'evry.dev'
 box_url = "~/EVRY/Boxes/centos-6.4.box"
 el_base_box = 'CentOS-6.4'
 
@@ -60,9 +60,9 @@ Vagrant.configure("2") do |config|
 
       DEBUG = ENV['DEBUG'] ? '--debug' : ''
       node_config.vm.provision :puppet do |puppet|
-        puppet.manifests_path = "site"         # usually manifests/
+        puppet.manifests_path = "VagrantConf/manifests"         # usually manifests/
         puppet.manifest_file  = "site.pp"
-        puppet.module_path    = [ "modules", "modules.extern", "site" ]
+        puppet.module_path    = [ "VagrantConf/modules.local", "VagrantConf/modules" ]
         puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
         puppet.facter = {
            "is_vagrant" => true,
