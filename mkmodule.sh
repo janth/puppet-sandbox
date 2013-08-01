@@ -54,6 +54,19 @@ while [[ ! -z $1 ]] ; do
   logg "Creating module ${modbase}/${module}"
   mkdir -p ${modbase}/${module}/{manifests,files,lib,templates,tests,spec}
 
+  logg "Creating Modulefile ${modbase}/${module}/Modulefile"
+  cat > ${modbase}/${module}/Modulefile <<X
+name    '${module}'
+version '1.0'
+source 'git://git.sandsli.dnb.no/...FIXME:'
+author '${user}'
+summary 'FIXME:'
+description 'FIXME:'
+project_page 'http://git.sandsli.dnb.no/...FIXME:'
+
+## Add dependencies, if any:
+# dependency 'username/name', '>= 1.2.0'
+X
   logg "Creating base manifest ${modbase}/${module}/manifests/init.pp"
   cat > ${modbase}/${module}/manifests/init.pp <<X
 # vim:ft=puppet:foldmethod=syntax

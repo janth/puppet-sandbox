@@ -27,6 +27,23 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
 
 4. `vim +BundleInstall +qall`
 
+### Testing
+* puppet-lint site/site.pp
+* puppet apply --noop --verbose site/site.pp
+
+### Andre anbefalinger:
+* Bruk alltid siste versjon av vagrant: http://downloads.vagrantup.com/
+* Installer puppet: http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html
+* Installer puppet-lint: http://puppet-lint.com/
+* Installer zsh: http://zsh.sourceforge.net/
+   http://www.masterzen.fr/2009/04/19/in-love-with-zsh-part-one/
+   http://grml.org/zsh/zsh-lovers.html
+   http://zshwiki.org/home/
+   http://www.slideshare.net/jaguardesignstudio/why-zsh-is-cooler-than-your-shell-16194692
+   http://fendrich.se/blog/2012/09/28/no/
+* Installer oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh og http://www.stevendobbelaere.be/installing-and-configuring-the-oh-my-zsh-shell/
+* grml-zsh: http://grml.org/zsh/
+
 ### links
 * MultiVM: https://gist.github.com/dlutzy/2469037
 * http://kiennt.com/blog/2012/06/28/using-vagrant-to-setup-multiple-virtual-machie.html

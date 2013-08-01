@@ -1,0 +1,18 @@
+alias c=clear
+alias a=alias
+
+alias sa="ssh-agent > $HOME/.ssh-agent ; source $HOME/.ssh-agent ; ssh-add"
+alias s=ssh
+
+#alias T='tree -A -U -L 2'
+alias T='tree -A --dirsfirst -L 2'
+
+alias v=vagrant
+alias vb='vagrant box'
+alias vd='vagrant destroy -f'
+alias vp='vagrant provision'
+alias vs='vagrant ssh'
+alias vS='vagrant status'
+alias vh='vagrant halt'
+alias vr='vagrant reload'
+alias vu='vagrant up'

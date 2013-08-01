@@ -58,10 +58,21 @@ Vagrant.configure("2") do |config|
       #node_config.vm.provision :shell, :path => "bootstrap.sh"
       #node_config.vm.provision :shell, :inline => "echo Hello"
 
+      DEBUG = ENV['DEBUG'] ? '--debug' : ''
+      node_config.vm.provision :puppet do |puppet|
+        puppet.manifests_path = "site"         # usually manifests/
+        puppet.manifest_file  = "site.pp"
+        puppet.module_path    = [ "modules", "modules.extern", "site" ]
+        puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
+        puppet.facter = {
+           "is_vagrant" => true,
+        }
+      end
+
     end # node_condig
   end # nodes loop
 
-  config.vm.define :puppetmaster do |puppetmaster_config|
+  #config.vm.define :puppetmaster do |puppetmaster_config|
     #puppetmaster_config.vm.provision :shell, :path => "puppet_master.sh"
     # Enable the Puppet provisioner
     #puppetmaster_config.vm.provision :puppet, :module_path => "VagrantConf/modules", :manifests_path => "VagrantConf/manifests", :manifest_file => "default.pp"
@@ -69,21 +80,21 @@ Vagrant.configure("2") do |config|
 
     ## Puppet workshop:
     ## Enable Puppet --debug setting on provisioning? Used from command line with DEBUG=true vagrant up nodeX
-    DEBUG = ENV['DEBUG'] ? '--debug' : ''
-    puppetmaster_config.vm.provision :puppet do |puppet|
-      puppet.manifests_path = "site"         # usually manifests/
-      puppet.manifest_file  = "site.pp"
-      puppet.module_path    = [ "modules", "modules.extern", "site" ]
-      puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
-      puppet.facter = {
-         "is_vagrant" => true,
-      }
-    end
+    #DEBUG = ENV['DEBUG'] ? '--debug' : ''
+    #puppetmaster_config.vm.provision :puppet do |puppet|
+    #  puppet.manifests_path = "site"         # usually manifests/
+    #  puppet.manifest_file  = "site.pp"
+    #  puppet.module_path    = [ "modules", "modules.extern", "site" ]
+    #  puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
+    #  puppet.facter = {
+    #     "is_vagrant" => true,
+    #  }
+    #end
 
     #puppetmaster_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
     #puppetmaster_config.vm.synced_folder "puppet/modules", "/etc/puppet/modules"
     #puppetmaster_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
-  end
+  #end
 end
 
 __END__
