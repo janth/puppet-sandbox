@@ -69,10 +69,15 @@ Vagrant.configure("2") do |config|
         }
       end
 
-    end # node_condig
+    end # node_config
   end # nodes loop
 
-  #config.vm.define :puppetmaster do |puppetmaster_config|
+  config.vm.define :puppetmaster do |master_config|
+    master_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
+    master_config.vm.synced_folder "puppet/modules",   "/etc/puppet/modules"
+    master_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
+  end
+
     #puppetmaster_config.vm.provision :shell, :path => "puppet_master.sh"
     # Enable the Puppet provisioner
     #puppetmaster_config.vm.provision :puppet, :module_path => "VagrantConf/modules", :manifests_path => "VagrantConf/manifests", :manifest_file => "default.pp"
