@@ -16,6 +16,7 @@ node default {
   include stdlib
 
   #include concat
+  include motd
   # include apache
 
   host { 'puppet.home.lan':
@@ -28,6 +29,7 @@ node default {
 }
 
 node puppetmaster {
+  include motd
   # FIXME This should not have to be duplicated...
   host { 'puppet.home.lan':
     ensure       => 'present',

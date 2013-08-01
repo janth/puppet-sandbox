@@ -1,0 +1,5 @@
+
+# Vagrant lab
+172.16.10.10 puppetmaster pm
+172.16.10.11 client1 c1
+172.16.10.12 client2 c2
