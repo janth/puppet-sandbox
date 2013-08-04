@@ -61,6 +61,7 @@ Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppet
 * grml-zsh: http://grml.org/zsh/
 
 ### links
+* PuppetLabs PDF doc: http://puppetlabs.com/misc/pdf-doc/
 * MultiVM: https://gist.github.com/dlutzy/2469037
 * http://kiennt.com/blog/2012/06/28/using-vagrant-to-setup-multiple-virtual-machie.html
 * https://github.com/patrickdlee/vagrant-examples

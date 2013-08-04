@@ -7,7 +7,9 @@ alias s=ssh
 #alias T='tree -A -U -L 2'
 alias T='tree -A --dirsfirst -L 2'
 
-alias av='alias -m -L "v*" av'
+# This only works with zsh
+[[ $SHELL == '/bin/zsh' ]] && alias av='alias -m -L "v*" av'
+
 alias v=vagrant
 alias vb='vagrant box'
 alias vd='vagrant destroy -f'
@@ -16,4 +18,5 @@ alias vs='vagrant ssh'
 alias vS='vagrant status'
 alias vh='vagrant halt'
 alias vr='vagrant reload'
+alias vl='vagrant reload'
 alias vu='vagrant up'

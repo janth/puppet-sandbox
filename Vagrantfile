@@ -1,4 +1,4 @@
-# vim:ft=ruby:sw=2:foldmethod=syntax
+# vim:ft=ruby:sw=2:foldmethod=syntax:foldlevel=3
 
 #####
 # Usage:
@@ -20,6 +20,8 @@
 # http://stackoverflow.com/questions/13065576/override-vagrant-configuration-settings-locally-per-dev
 # https://github.com/grahamgilbert/vagrant-puppetmaster
 # https://github.com/puppetlabs/puppet-vagrant-boxes
+#
+# https://github.com/grahamgilbert/vagrant-puppetmaster
 
 # ENV['VAGRANT_LOG'] = 'debug' # Does not work, probably too late anyway
 domain = 'evry.dev'
@@ -27,9 +29,9 @@ box_url = "~/EVRY/Boxes/centos-6.4.box"
 el_base_box = 'CentOS-6.4'
 
 nodes = [
-  { :hostname => 'puppetmaster', :ip => '172.16.10.10', :box => 'CentOS-6.4', :ram => 224 },
-  { :hostname => 'client1',      :ip => '172.16.10.11', :box => 'CentOS-6.4', :ram => 224 },
-  { :hostname => 'client2',      :ip => '172.16.10.12', :box => 'CentOS-6.4', :ram => 224 },
+  { :hostname => 'puppet',  :ip => '172.16.10.10', :box => 'CentOS-6.4', :ram => 384 },
+  { :hostname => 'client1', :ip => '172.16.10.11', :box => 'CentOS-6.4', :ram => 224 },
+  { :hostname => 'client2', :ip => '172.16.10.12', :box => 'CentOS-6.4', :ram => 224 },
 ]
 
 Vagrant.configure("2") do |config|
@@ -43,6 +45,9 @@ Vagrant.configure("2") do |config|
       # Port Forwarding and shared folders
       #node_config.vm.network :forwarded_port, guest: 80, host: 8080
       node_config.vm.synced_folder "/home/et2441", "/vagrant_data"
+      node_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
+      node_config.vm.synced_folder "puppet/modules",   "/etc/puppet/modules"
+      node_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
 
       memory = node[:ram] ? node[:ram] : 256;
       node_config.vm.provider :virtualbox do |vb|
@@ -63,7 +68,9 @@ Vagrant.configure("2") do |config|
         puppet.manifests_path = "VagrantConf/manifests"         # usually manifests/
         puppet.manifest_file  = "site.pp"
         puppet.module_path    = [ "VagrantConf/modules.local", "VagrantConf/modules" ]
-        puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
+        #puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
+        #puppet.options        = "--verbose %s" % DEBUG
+        puppet.options        = "--verbose --debug"
         puppet.facter = {
            "is_vagrant" => true,
         }
@@ -72,34 +79,12 @@ Vagrant.configure("2") do |config|
     end # node_config
   end # nodes loop
 
-  config.vm.define :puppetmaster do |master_config|
-    master_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
-    master_config.vm.synced_folder "puppet/modules",   "/etc/puppet/modules"
-    master_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
-  end
 
     #puppetmaster_config.vm.provision :shell, :path => "puppet_master.sh"
     # Enable the Puppet provisioner
     #puppetmaster_config.vm.provision :puppet, :module_path => "VagrantConf/modules", :manifests_path => "VagrantConf/manifests", :manifest_file => "default.pp"
     # puppet.manifests_path = File.expand_path("../manifests", __FILE__)
 
-    ## Puppet workshop:
-    ## Enable Puppet --debug setting on provisioning? Used from command line with DEBUG=true vagrant up nodeX
-    #DEBUG = ENV['DEBUG'] ? '--debug' : ''
-    #puppetmaster_config.vm.provision :puppet do |puppet|
-    #  puppet.manifests_path = "site"         # usually manifests/
-    #  puppet.manifest_file  = "site.pp"
-    #  puppet.module_path    = [ "modules", "modules.extern", "site" ]
-    #  puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
-    #  puppet.facter = {
-    #     "is_vagrant" => true,
-    #  }
-    #end
-
-    #puppetmaster_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
-    #puppetmaster_config.vm.synced_folder "puppet/modules", "/etc/puppet/modules"
-    #puppetmaster_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
-  #end
 end
 
 __END__

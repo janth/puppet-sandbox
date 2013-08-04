@@ -1,11 +1,13 @@
-# vim:ft=puppet:foldmethod=syntax:tw=80
+# vim:ft=puppet:foldmarker={,}:foldlevel=1:foldmethod=marker:tw=80
 
 # http://projects.puppetlabs.com/projects/1/wiki/Puppet_Best_Practice2
 
 node default {
+  notify {'JTM: node default!!!':}
 }
 
-node basenode {
+node basenode inherits default {
+  notify {'JTM: node basenode!!!':}
   # Only for RHEL:
   # include epel
 
@@ -25,19 +27,101 @@ node basenode {
     host_aliases => ['puppet', 'pm'],
     ip           => '172.16.10.10',
     target       => '/etc/hosts',
-    comment      => 'Entry for PuppetMaster in EVRY lab',
+#   comment      => 'Entry for PuppetMaster in EVRY lab',
   }
 
-  # TODO
-  # copy saved /etc/ssh/ssh_host keys
-  # fix /etc/sudoers
-  # fix /etc/rsyslog.conf
-  # add user vagrant to groups vagrant*
+  package {'nc':
+    ensure  =>  latest,
+  }
 
-  notify {'Default setup on node default complete.':}
+  package {'traceroute':
+    ensure  =>  latest,
+  }
+
+  package {'puppet':
+    ensure  =>  latest,
+    require => Host['puppet.evry.dev'],
+  }
+
+  service {'puppet':
+    ensure  => running,
+    require => Package['puppet'],
+  }
+
+  file {'/etc/puppet/puppet.conf':
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    source  => [
+        "/vagrant/puppet/puppet-$hostname.conf",
+        '/vagrant/puppet/puppet-node.conf',
+      ],
+    notify  => Service['puppet'],
+    require => Package['puppet'],
+  }
+
+  service {'rsyslog':
+    ensure => running,
+  }
+
+  file {'/etc/rsyslog.conf':
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0644',
+    source => '/vagrant/evry/rsyslog.conf',
+    notify => Service['rsyslog'],
+  }
+
+  service {'sshd':
+    ensure => running,
+  }
+
+  file {'/etc/ssh/sshd_config':
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0644',
+    source => '/vagrant/evry/sshd_config',
+    notify => Service['sshd'],
+  }
+
+  file {'/etc/sudoers':
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0440',
+    source => '/vagrant/evry/sudoers',
+  }
+
+  file {'/var/log':
+    ensure  => directory,
+    owner   => root,
+    group   => admin,
+    mode    => '0644',
+    recurse => true,
+  }
+
+  /* Fixed with 'manage_internal_file_permissions = false' in puppet.conf
+  exec {'chmod /var/log/puppet':
+    command   => '/bin/chmod 755 /var/log/puppet',
+  }
+  */
+
+  user {'vagrant':
+    ensure => present,
+    groups => ['puppet'],
+  }
+
+  #notify {'Default setup on node default complete.':}
+}
+
+node 'client1.evry.dev' inherits basenode {
+  notify {'JTM: node client1.evry.dev!!!':}
 }
 
 node 'puppet.evry.dev' inherits basenode {
+  notify {'JTM: node puppet.evry.dev!!!':}
   include motd
 
   /*
@@ -50,11 +134,23 @@ node 'puppet.evry.dev' inherits basenode {
   }
   */
 
+  service{'iptables':
+    ensure => stopped,
+  }
+  # TODO Consider using puppetlabs-firewall module, to open for puppet
+  # traffic...
+
   package {'puppet-server':
     ensure  =>  latest,
     require => Host['puppet.evry.dev'],
   }
 
+  service {'puppetmaster':
+    ensure  => running,
+    require => Package['puppet-server'],
+  }
+
+/*
   # Configure puppetdb and its underlying database
   class { 'puppetdb':
     listen_address   => '0.0.0.0',
@@ -69,28 +165,43 @@ node 'puppet.evry.dev' inherits basenode {
     dashboard_port => '3000',
     require        => Package['puppet-server'],
   }
+*/
+
   ##we copy rather than symlinking as puppet will manage this
+/*
   file {'/etc/puppet/puppet.conf':
     ensure  => present,
     owner   => root,
     group   => root,
-    source  => '/vagrant/puppet/puppet.conf',
+    source  => '/vagrant/puppet/puppet-master.conf',
     notify  => [Service['puppetmaster'],
-        Service['puppet-dashboard'],
-        Service['puppet-dashboard-workers']
+#       Service['puppet-dashboard'],
+#       Service['puppet-dashboard-workers']
       ],
     require => Package['puppet-server'],
+  }
+*/
+
+  file {'/etc/sysconfig/puppetmaster':
+    ensure   => present,
+    owner    => root,
+    group    => root,
+    source   => '/vagrant/evry/puppetmaster',
+    #notify  => Service['puppetmaster'],
+    require  => Package['puppet-server'],
   }
 
   file {'/etc/puppet/autosign.conf':
     ensure  => link,
     owner   => root,
     group   => root,
+    mode    => '0644',
     source  => '/vagrant/puppet/autosign.conf',
     notify  => [Service['puppetmaster'],
-        Service['puppet-dashboard'],
-        Service['puppet-dashboard-workers']
-      ],
+        Service['puppet'],
+#       Service['puppet-dashboard'],
+#       Service['puppet-dashboard-workers']
+  ],
     require => Package['puppet-server'],
   }
 
@@ -100,9 +211,9 @@ node 'puppet.evry.dev' inherits basenode {
     group   => root,
     source  => '/vagrant/puppet/auth.conf',
     notify  => [Service['puppetmaster'],
-        Service['puppet-dashboard'],
-        Service['puppet-dashboard-workers']
-      ],
+#       Service['puppet-dashboard'],
+#       Service['puppet-dashboard-workers']
+  ],
     require => Package['puppet-server'],
   }
 
@@ -112,9 +223,10 @@ node 'puppet.evry.dev' inherits basenode {
     group   => root,
     source  => '/vagrant/puppet/fileserver.conf',
     notify  => [Service['puppetmaster'],
-        Service['puppet-dashboard'],
-        Service['puppet-dashboard-workers']
-      ],
+        Service['puppet'],
+#       Service['puppet-dashboard'],
+#       Service['puppet-dashboard-workers']
+  ],
     require => Package['puppet-server'],
   }
 
@@ -129,15 +241,16 @@ node 'puppet.evry.dev' inherits basenode {
     group  => root,
     source => '/vagrant/puppet/hiera.yaml',
     notify => [Service['puppetmaster'],
-        Service['puppet-dashboard'],
-        Service['puppet-dashboard-workers']
-      ],
+        Service['puppet'],
+#       Service['puppet-dashboard'],
+#       Service['puppet-dashboard-workers']
+  ],
   }
- 
+
   file { '/etc/puppet/hieradata':
     mode    => '0644',
     recurse => true,
   }
 
-  notify {'PuppetMaster setup on node puppet complete.':}
+  #notify {'PuppetMaster setup on node puppet complete.':}
 }
