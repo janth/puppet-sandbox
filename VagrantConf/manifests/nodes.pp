@@ -54,7 +54,7 @@ node basenode inherits default {
     owner   => root,
     group   => root,
     source  => [
-        "/vagrant/puppet/puppet-$hostname.conf",
+      #"/vagrant/puppet/puppet-$hostname.conf",
         '/vagrant/puppet/puppet-node.conf',
       ],
     notify  => Service['puppet'],
@@ -101,6 +101,15 @@ node basenode inherits default {
     group   => admin,
     mode    => '0644',
     recurse => true,
+  }
+
+  file {'/var/log/puppet':
+    ensure  => directory,
+    owner   => puppet,
+    group   => puppet,
+    mode    => '0664',
+    recurse => true,
+    require => File['/var/log'],
   }
 
   service{'iptables':
@@ -154,22 +163,32 @@ node 'puppet.evry.dev' inherits basenode {
     require => Package['puppet-server'],
   }
 
-/*
   # Configure puppetdb and its underlying database
   class { 'puppetdb':
-    listen_address   => '0.0.0.0',
-    require          => Package['puppet-server'],
-    puppetdb_version => latest,
-    }
+    listen_address       => '0.0.0.0',
+    listen_port          => '8080',
+    database             => 'postgres',
+    open_listen_port     => 'false',
+    open_ssl_listen_port => 'false',
+    require              => Package['puppet-server'],
+    puppetdb_version     => latest,
+  }
   # Configure the puppet master to use puppetdb
-  class { 'puppetdb::master::config': }
+  class { 'puppetdb::master::config':
+    manage_config           => 'true',
+    manage_storeconfigs     => 'true',
+    manage_report_processor => 'true',
+    enable_reports          => 'true',
+    restart_puppet          => 'true',
+  }
 
+  # Dependencies: rubygems, ruby-rake, mysql-server, ruby-mysql
+  # Should be automaic installed
   class {'dashboard':
     dashboard_site => $fqdn,
     dashboard_port => '3000',
     require        => Package['puppet-server'],
   }
-*/
 
   ##we copy rather than symlinking as puppet will manage this
 /*

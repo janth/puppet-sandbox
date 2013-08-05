@@ -70,7 +70,8 @@ Vagrant.configure("2") do |config|
         puppet.module_path    = [ "VagrantConf/modules.local", "VagrantConf/modules" ]
         #puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
         #puppet.options        = "--verbose %s" % DEBUG
-        puppet.options        = "--verbose --debug"
+        #puppet.options        = "--verbose --debug"
+        puppet.options        = "--verbose"
         puppet.facter = {
            "is_vagrant" => true,
         }
