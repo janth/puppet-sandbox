@@ -42,6 +42,11 @@ date=$( date +'%Y-%m-%d %H:%M' )
 user=$( id -un )
 modbase=modules
 
+if [[ $( type -P puppet ) != '/usr/bin/puppet' ]] ; then
+   logg "\nERROR: Can't find puppet on this host\nPlease install puppet using the instructions on http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html, and then rerun ${script_name}\n"
+   exit 1
+fi
+
 logg "Adding puppetmaster and clients to /etc/hosts, using puppet"
 # This doesn't work, how to specify an array to host_aliases on the cli
 #sudo puppet resource host puppet.evry.dev ensure=present host_aliases="['puppet', 'pm']" ip=172.16.10.10 target=/etc/hosts
@@ -101,3 +106,27 @@ fi
 logg "\nPlease add this to your ~/.ssh/config for easy ssh-access to the lab-boxes:\n(content from addme-ssh-config):\n\n"
 cat ${script_path}/addme-ssh-config
 echo -e "\n"
+
+if [[ $( type -P vagrant ) != '/usr/bin/vagrant' ]] ; then
+   logg "\nERROR: Can't find vagrant on this host\nPlease get vagrant from http://downloads.vagrantup.com/\n"
+   exit 1
+fi
+
+version=$( vagrant -v | awk '{print $NF}')
+version_num=$( vagrant -v | awk '{print $NF}' | sed -e 's/\.//g' )
+if [[ ${version_num} -lt 127 ]] ; then
+   logg "\nERROR: vagrant version too low: ${version}, we need at least 1.2.7\nPlease get vagrant from http://downloads.vagrantup.com/\n"
+   exit 1
+fi
+
+if [[ $( type -P VBoxManage ) != '/usr/bin/VBoxManage' ]] ; then
+   logg "\nERROR: Can't find VitrualBox (VBoxManage) on this host\nPlease get VirtualBox from https://www.virtualbox.org/wiki/Downloads\n"
+   exit 1
+fi
+
+logg "These boxes are currently defined in vagrant:"
+vagrant box list
+logg "These boxes are currently used in EVRY LAB Vagrantfile ${script_path}/Vagrantfile:"
+grep -o ":box => '.*',"  ${script_path}/Vagrantfile
+
+logg "\n\nIf everything is ok, you may now proceed with:\nvagrant up puppet\nvagrant provision puppet (repeat untill no errors!)\nvagrant up client1\n"

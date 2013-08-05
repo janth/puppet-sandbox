@@ -45,6 +45,7 @@ node basenode inherits default {
 
   service {'puppet':
     ensure  => running,
+    enable  => true,
     require => Package['puppet'],
   }
 
@@ -102,6 +103,14 @@ node basenode inherits default {
     recurse => true,
   }
 
+  service{'iptables':
+    ensure => stopped,
+    enable => false,
+  }
+  # TODO Consider using puppetlabs-firewall module, to open for puppet
+  # traffic...
+
+
   /* Fixed with 'manage_internal_file_permissions = false' in puppet.conf
   exec {'chmod /var/log/puppet':
     command   => '/bin/chmod 755 /var/log/puppet',
@@ -134,12 +143,6 @@ node 'puppet.evry.dev' inherits basenode {
   }
   */
 
-  service{'iptables':
-    ensure => stopped,
-  }
-  # TODO Consider using puppetlabs-firewall module, to open for puppet
-  # traffic...
-
   package {'puppet-server':
     ensure  =>  latest,
     require => Host['puppet.evry.dev'],
@@ -147,6 +150,7 @@ node 'puppet.evry.dev' inherits basenode {
 
   service {'puppetmaster':
     ensure  => running,
+    enable  => true,
     require => Package['puppet-server'],
   }
 
