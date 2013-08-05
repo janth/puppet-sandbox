@@ -1,0 +1,16 @@
+# Location of the main manifest
+#PUPPETMASTER_MANIFEST=/etc/puppet/manifests/site.pp
+
+# Where to send messages. Choose between syslog, the console, and a log
+# file. Defaults to sending messages to syslog, or the console if
+# debugging or verbosity is enabled.
+# log is defined in /etc/puppet/puppet.conf
+PUPPETMASTER_LOG=syslog
+
+# You may specify an alternate port on which your puppetmaster should listen. Default is: 8140
+# An example with puppetmaster on a different port, run with standard webrick servertype
+#PUPPETMASTER_PORTS="8141"
+
+# You may specify other parameters to the puppetmaster here
+#PUPPETMASTER_EXTRA_OPTS=--no-ca
+PUPPETMASTER_EXTRA_OPTS=--debug

@@ -45,6 +45,7 @@ node basenode inherits default {
 
   service {'puppet':
     ensure  => running,
+    enable  => true,
     require => Package['puppet'],
   }
 
@@ -99,19 +100,33 @@ node basenode inherits default {
     owner   => root,
     group   => admin,
     mode    => '0644',
+    recurse => false,
+  }
+
+  file {'/var/log/puppet':
+    ensure  => directory,
+    owner   => puppet,
+    group   => puppet,
+    mode    => '0664',
     recurse => true,
   }
 
-  /* Fixed with 'manage_internal_file_permissions = false' in puppet.conf
+  # Fixed with 'manage_internal_file_permissions = false' in puppet.conf
   exec {'chmod /var/log/puppet':
-    command   => '/bin/chmod 755 /var/log/puppet',
+    command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppet ; /bin/chmod g+ws /var/log/puppet" ',
   }
-  */
 
   user {'vagrant':
     ensure => present,
     groups => ['puppet'],
   }
+
+  service{'iptables':
+    ensure => stopped,
+    enable => false,
+  }
+  # TODO Consider using puppetlabs-firewall module, to open for puppet
+  # traffic...
 
   #notify {'Default setup on node default complete.':}
 }
@@ -125,20 +140,19 @@ node 'puppet.evry.dev' inherits basenode {
   include motd
 
   /*
+  #Error: Duplicate declaration: User[vagrant] is already declared in file ...
   user { 'vagrant':
     ensure     => present,
-    groups     => ['puppet', 'puppetdb', 'puppet-dashboard'],
+    groups     => ['puppet', 'puppet-dashboard'],
+#   groups     => ['puppet', 'puppetdb', 'puppet-dashboard'],
     membership => minimum,
-    require    => [ Package['puppet-server'], Package['puppet-dashboard'],
-      Package['puppetdb'] ],
+    require    => [
+      Package['puppet-server'],
+      Package['puppet-dashboard'],
+      #Package['puppetdb']
+    ],
   }
   */
-
-  service{'iptables':
-    ensure => stopped,
-  }
-  # TODO Consider using puppetlabs-firewall module, to open for puppet
-  # traffic...
 
   package {'puppet-server':
     ensure  =>  latest,
@@ -147,25 +161,80 @@ node 'puppet.evry.dev' inherits basenode {
 
   service {'puppetmaster':
     ensure  => running,
+    enable  => true,
     require => Package['puppet-server'],
   }
 
-/*
   # Configure puppetdb and its underlying database
   class { 'puppetdb':
-    listen_address   => '0.0.0.0',
-    require          => Package['puppet-server'],
-    puppetdb_version => latest,
-    }
+    database             => 'postgres',
+#   database_name        => 'puppetdb',
+#   database_password    => 'puppetdb',
+    listen_address       => '127.0.0.1',
+    listen_port          => '8080',
+#   ssl_listen_address   => '0.0.0.0',
+#   ssl_listen_port      => '8080',
+    # Do not manage firewall, as we keep it disabled
+    open_ssl_listen_port => false,
+    open_listen_port     => false, 
+    disable_ssl          => false,
+    require              => Package['puppet-server'],
+    puppetdb_version     => latest,
+#   java_args            => '{ '-Xmx'                 => '512m', '-Xms' => '256m' }
+  }
   # Configure the puppet master to use puppetdb
-  class { 'puppetdb::master::config': }
+  class { 'puppetdb::master::config':
+    manage_storeconfigs      => true,
+    manage_report_processor  => true,
+    manage_config            => true,
+    strict_validation        => false,
+    puppetdb_startup_timeout => 15,
+  }
 
-  class {'dashboard':
-    dashboard_site => $fqdn,
-    dashboard_port => '3000',
-    require        => Package['puppet-server'],
+# Dashboard: http://docs.puppetlabs.com/dashboard/manual/1.2/bootstrapping.html
+# prereq: rubygem-rake mysql-server ruby-mysql
+# puppet-dashboard
+
+  package {'rubygem-rake':
+    ensure  =>  latest,
+  }
+
+/* Handleles by class dashboard
+  package {'mysql-server':
+    ensure  =>  latest,
+  }
+
+  package {'ruby-mysql':
+    ensure  =>  latest,
+  }
+
+  package {'puppet-dashboard':
+    ensure  => latest,
+    require => [
+          Host['puppet.evry.dev'],
+          Package['puppet-server'],
+          Package['rubygem-rake'],
+          #Package['mysql-server'],
+          #Package['ruby-mysql'],
+        ]
   }
 */
+
+
+  class {'dashboard':
+    dashboard_user        => 'puppet-dashboard',
+    dashboard_group       => 'puppet-dashboard',
+    dashboard_password    => 'changeme',
+    dashboard_db          => 'dashboard_production',
+    dashboard_charset     => 'utf8',
+#   dashboard_environment => 'production',
+    dashboard_site        => $fqdn,
+    dashboard_port        => '3000',
+    passenger             => false,
+    mysql_root_pw         => 'changemetoo',
+#   rails_base_uri        => '/',
+#   require               => Package['puppet-dashboard'],
+  }
 
   ##we copy rather than symlinking as puppet will manage this
 /*
