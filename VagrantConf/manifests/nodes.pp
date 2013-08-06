@@ -112,24 +112,36 @@ node basenode inherits default {
     require => File['/var/log'],
   }
 
+
+  file {'/var/log/puppetdb':
+    ensure  => directory,
+    owner   => puppetdb,
+    group   => puppetdb,
+    mode    => '0664',
+    recurse => true,
+    require => File['/var/log'],
+  }
+
+  # Fixed with 'manage_internal_file_permissions = false' in puppet.conf
+  exec {'chmod /var/log/puppet':
+    command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppet ; /bin/chmod g+ws /var/log/puppet" ',
+  }
+  exec {'chmod /var/log/puppetdb':
+    command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppetdb ; /bin/chmod g+ws /var/log/puppetdb" ',
+  }
+
+  user {'vagrant':
+    ensure => present,
+    groups => ['puppet'],
+  }
+
+  # Disable iptables firewall
   service{'iptables':
     ensure => stopped,
     enable => false,
   }
   # TODO Consider using puppetlabs-firewall module, to open for puppet
   # traffic...
-
-
-  /* Fixed with 'manage_internal_file_permissions = false' in puppet.conf
-  exec {'chmod /var/log/puppet':
-    command   => '/bin/chmod 755 /var/log/puppet',
-  }
-  */
-
-  user {'vagrant':
-    ensure => present,
-    groups => ['puppet'],
-  }
 
   #notify {'Default setup on node default complete.':}
 }
@@ -143,12 +155,17 @@ node 'puppet.evry.dev' inherits basenode {
   include motd
 
   /*
+  #Error: Duplicate declaration: User[vagrant] is already declared in file ...
   user { 'vagrant':
     ensure     => present,
-    groups     => ['puppet', 'puppetdb', 'puppet-dashboard'],
+    groups     => ['puppet', 'puppet-dashboard'],
+#   groups     => ['puppet', 'puppetdb', 'puppet-dashboard'],
     membership => minimum,
-    require    => [ Package['puppet-server'], Package['puppet-dashboard'],
-      Package['puppetdb'] ],
+    require    => [
+      Package['puppet-server'],
+      Package['puppet-dashboard'],
+      #Package['puppetdb']
+    ],
   }
   */
 
@@ -163,32 +180,100 @@ node 'puppet.evry.dev' inherits basenode {
     require => Package['puppet-server'],
   }
 
+#############
+  # PuppetDB: http://docs.puppetlabs.com/puppetdb/latest/http://docs.puppetlabs.com/puppetdb/latest/
+  # http://forge.puppetlabs.com/puppetlabs/puppetdb
   # Configure puppetdb and its underlying database
+  # NOTE Must run sudo /usr/sbin/puppetdb-ssl-setup
   class { 'puppetdb':
-    listen_address       => '0.0.0.0',
-    listen_port          => '8080',
-    database             => 'postgres',
-    open_listen_port     => 'false',
-    open_ssl_listen_port => 'false',
-    require              => Package['puppet-server'],
-    puppetdb_version     => latest,
+    database               => 'postgres',
+    database_name          => 'puppetdb',
+    database_password      => 'puppetdb',
+    listen_address         => '0.0.0.0',
+    listen_port            => '8080',
+    ssl_listen_address     => '0.0.0.0',
+    ssl_listen_port        => '8081',
+    disable_ssl            => false,
+    open_ssl_listen_port   => false,
+    open_listen_port       => false,
+    open_postgres_port     => false,
+    require                => Package['puppet-server'],
+    puppetdb_version       => latest,
   }
+#   java_args             => '{ '-Xmx'                 => '512m', '-Xms' => '256m' }
+
   # Configure the puppet master to use puppetdb
   class { 'puppetdb::master::config':
-    manage_config           => 'true',
-    manage_storeconfigs     => 'true',
-    manage_report_processor => 'true',
-    enable_reports          => 'true',
-    restart_puppet          => 'true',
+    manage_config            => true,
+    manage_storeconfigs      => true,
+    manage_report_processor  => true,
+    enable_reports           => true,
+    strict_validation        => false,
+    puppetdb_startup_timeout => 15,
+    restart_puppet           => true,
   }
 
+  file {'/etc/puppetdb':
+    ensure  => directory,
+    owner   => puppetdb,
+    group   => puppetdb,
+    mode    => '0664',
+    recurse => true,
+  }
+
+  exec {'chmod /etc/puppetdb':
+    command   => '/bin/bash -c "/bin/chmod 775 /etc/puppetdb ; /bin/chmod g+ws /etc/puppetdb" ',
+  }
+  # http://docs.puppetlabs.com/puppetdb/1.3/install_from_source.html#step-3-option-a-run-the-ssl-configuration-script
+  exec {'fix-keystore':
+    command => '/usr/sbin/puppetdb-ssl-setup',
+  }
+
+#############
+  # Dashboard: http://docs.puppetlabs.com/dashboard/manual/1.2/bootstrapping.html
+  # https://github.com/puppetlabs/puppetlabs-dashboard
   # Dependencies: rubygems, ruby-rake, mysql-server, ruby-mysql
   # Should be automaic installed
   class {'dashboard':
-    dashboard_site => $fqdn,
-    dashboard_port => '3000',
-    require        => Package['puppet-server'],
+    dashboard_site        => $fqdn,
+    dashboard_port        => '3000',
+#   dashboard_user        => 'puppet-dashboard',
+#   dashboard_group       => 'puppet-dashboard',
+#   dashboard_password    => 'changeme',
+#   dashboard_db          => 'dashboard_production',
+#   dashboard_charset     => 'utf8',
+#   dashboard_environment => 'production',
+#   passenger             => false,
+#   mysql_root_pw         => 'changemetoo',
+#   rails_base_uri        => '/',
+#   require               => Package['puppet-dashboard'],
   }
+
+/* Handled by class dashboard
+
+  package {'rubygem-rake':
+    ensure  =>  latest,
+  }
+
+  package {'mysql-server':
+    ensure  =>  latest,
+  }
+
+  package {'ruby-mysql':
+    ensure  =>  latest,
+  }
+
+  package {'puppet-dashboard':
+    ensure  => latest,
+    require => [
+          Host['puppet.evry.dev'],
+          Package['puppet-server'],
+          Package['rubygem-rake'],
+          #Package['mysql-server'],
+          #Package['ruby-mysql'],
+        ]
+  }
+*/
 
   ##we copy rather than symlinking as puppet will manage this
 /*
