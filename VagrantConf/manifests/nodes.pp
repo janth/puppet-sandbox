@@ -100,7 +100,7 @@ node basenode inherits default {
     owner   => root,
     group   => admin,
     mode    => '0644',
-    recurse => false,
+    recurse => true,
   }
 
   file {'/var/log/puppet':
@@ -109,11 +109,24 @@ node basenode inherits default {
     group   => puppet,
     mode    => '0664',
     recurse => true,
+    require => File['/var/log'],
+  }
+
+  file {'/var/log/puppetdb':
+    ensure  => directory,
+    owner   => puppetdb,
+    group   => puppetdb,
+    mode    => '0664',
+    recurse => true,
+    require => File['/var/log'],
   }
 
   # Fixed with 'manage_internal_file_permissions = false' in puppet.conf
   exec {'chmod /var/log/puppet':
     command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppet ; /bin/chmod g+ws /var/log/puppet" ',
+  }
+  exec {'chmod /var/log/puppetdb':
+    command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppetdb ; /bin/chmod g+ws /var/log/puppetdb" ',
   }
 
   user {'vagrant':
@@ -178,6 +191,7 @@ node 'puppet.evry.dev' inherits basenode {
     open_ssl_listen_port => false,
     open_listen_port     => false, 
     disable_ssl          => false,
+    # NOTE Must run sudo /usr/sbin/puppetdb-ssl-setup
     require              => Package['puppet-server'],
     puppetdb_version     => latest,
 #   java_args            => '{ '-Xmx'                 => '512m', '-Xms' => '256m' }
@@ -191,6 +205,17 @@ node 'puppet.evry.dev' inherits basenode {
     puppetdb_startup_timeout => 15,
   }
 
+  file {'/etc/puppetdb':
+    ensure  => directory,
+    owner   => puppetdb,
+    group   => puppetdb,
+    mode    => '0664',
+    recurse => true,
+  }
+
+  exec {'chmod /etc/puppetdb':
+    command   => '/bin/bash -c "/bin/chmod 775 /etc/puppetdb ; /bin/chmod g+ws /etc/puppetdb" ',
+  }
 # Dashboard: http://docs.puppetlabs.com/dashboard/manual/1.2/bootstrapping.html
 # prereq: rubygem-rake mysql-server ruby-mysql
 # puppet-dashboard
