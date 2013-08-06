@@ -213,7 +213,7 @@ node 'puppet.evry.dev' inherits basenode {
     restart_puppet           => true,
   }
 
-  file {'/etc/puppetdb':
+  file {'/etc/puppetdb/':
     ensure  => directory,
     owner   => puppetdb,
     group   => puppetdb,
@@ -221,12 +221,27 @@ node 'puppet.evry.dev' inherits basenode {
     recurse => true,
   }
 
+  file {'/var/lib/puppet/':
+    ensure  => directory,
+    owner   => puppet,
+    group   => puppet,
+    mode    => '0664',
+    recurse => true,
+  }
+
   exec {'chmod /etc/puppetdb':
     command   => '/bin/bash -c "/bin/chmod 775 /etc/puppetdb ; /bin/chmod g+ws /etc/puppetdb" ',
   }
+
   # http://docs.puppetlabs.com/puppetdb/1.3/install_from_source.html#step-3-option-a-run-the-ssl-configuration-script
   exec {'fix-keystore':
-    command => '/usr/sbin/puppetdb-ssl-setup',
+    command => '/usr/sbin/puppetdb-ssl-setup -f',
+    onlyif => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
+  }
+  exec {'fix-openssl':
+    #command => '/bin/ln -s /etc/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /etc/puppet/ssl/certs/ca.pem).0', 
+    command  => '/bin/ln -s /var/lib/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /var/lib/puppet/ssl/certs/ca.pem).0',
+    onlyif   => '/usr/bin/test -f /etc/puppet/ssl/certs/ca.pem',
   }
 
 #############
@@ -362,3 +377,15 @@ node 'puppet.evry.dev' inherits basenode {
 
   #notify {'PuppetMaster setup on node puppet complete.':}
 }
+
+/*
+TODO
+fix puppet-dashboard stop + start errors complaining about 
+config.gem: Unpacked gem mocha-0.9.7 in vendor/gems has no specification file.
+Run 'rake gems:refresh_specs' to fix this.
+
+cd /usr/share/puppet-dashboard/vendor/gems ; rake gems:refresh_specs
+
+
+ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet
+*/
