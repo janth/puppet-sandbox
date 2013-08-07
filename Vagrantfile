@@ -63,6 +63,7 @@ Vagrant.configure("2") do |config|
       #node_config.vm.provision :shell, :path => "bootstrap.sh"
       #node_config.vm.provision :shell, :inline => "echo Hello"
 
+      # http://vstone.eu/vagrant-and-virtualbox-a-debugging-story/
       DEBUG = ENV['DEBUG'] ? '--debug' : ''
       node_config.vm.provision :puppet do |puppet|
         puppet.manifests_path = "VagrantConf/manifests"         # usually manifests/
@@ -226,4 +227,5 @@ end
   #  }
   #end
 
+  https://github.com/dotless-de/vagrant-vbguest
 end

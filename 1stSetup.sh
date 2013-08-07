@@ -43,44 +43,52 @@ user=$( id -un )
 modbase=modules
 
 if [[ $( type -P puppet ) != '/usr/bin/puppet' ]] ; then
-   logg "\nERROR: Can't find puppet on this host\nPlease install puppet using the instructions on http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html, and then rerun ${script_name}\n"
-   exit 1
-fi
+   logg "\nWARNING: Can't find puppet on this host\nIf you want to install puppet, use the instructions on http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html\n"
+   logg "\nPlease add the following to your /etc/hosts, for easy ssh to the boxes:\n"
+   cat <<X
 
-logg "Adding puppetmaster and clients to /etc/hosts, using puppet"
-# This doesn't work, how to specify an array to host_aliases on the cli
-#sudo puppet resource host puppet.evry.dev ensure=present host_aliases="['puppet', 'pm']" ip=172.16.10.10 target=/etc/hosts
-#sudo puppet resource host client1.evry.dev ensure=present host_aliases=client1 ip=172.16.10.11 target=/etc/hosts
-#sudo puppet resource host client2.evry.dev ensure=present host_aliases=client2 ip=172.16.10.12 target=/etc/hosts
+172.16.10.10   puppet.evry.dev   puppet pm
+172.16.10.11   client1.evry.dev  client1 c1
+172.16.10.12   client2.evry.dev  client2 c2
 
-fixit=/tmp/fixit.pp
-cat > ${fixit} <<X
-node default {
-  host { 'puppet.evry.dev':
-    ensure       => 'present',
-    host_aliases => ['puppet', 'pm'],
-    ip           => '172.16.10.10',
-    target       => '/etc/hosts',
-  }
+X
+else
 
-  host { 'client1.evry.dev':
-    ensure       => 'present',
-    host_aliases => ['client1', 'c1'],
-    ip           => '172.16.10.11',
-    target       => '/etc/hosts',
-  }
+   logg "Adding puppetmaster and clients to /etc/hosts, using puppet"
+   # This doesn't work, how to specify an array to host_aliases on the cli
+   #sudo puppet resource host puppet.evry.dev ensure=present host_aliases="['puppet', 'pm']" ip=172.16.10.10 target=/etc/hosts
+   #sudo puppet resource host client1.evry.dev ensure=present host_aliases=client1 ip=172.16.10.11 target=/etc/hosts
+   #sudo puppet resource host client2.evry.dev ensure=present host_aliases=client2 ip=172.16.10.12 target=/etc/hosts
 
-  host { 'client2.evry.dev':
-    ensure       => 'present',
-    host_aliases => ['client2', 'c2'],
-    ip           => '172.16.10.12',
-    target       => '/etc/hosts',
-  }
-}
+   fixit=/tmp/fixit.pp
+   cat > ${fixit} <<X
+   node default {
+     host { 'puppet.evry.dev':
+       ensure       => 'present',
+       host_aliases => ['puppet', 'pm'],
+       ip           => '172.16.10.10',
+       target       => '/etc/hosts',
+     }
+
+     host { 'client1.evry.dev':
+       ensure       => 'present',
+       host_aliases => ['client1', 'c1'],
+       ip           => '172.16.10.11',
+       target       => '/etc/hosts',
+     }
+
+     host { 'client2.evry.dev':
+       ensure       => 'present',
+       host_aliases => ['client2', 'c2'],
+       ip           => '172.16.10.12',
+       target       => '/etc/hosts',
+     }
+   }
 X
 
-sudo puppet apply ${fixit}
-rm ${fixit}
+   sudo puppet apply ${fixit}
+   rm ${fixit}
+fi
 
 logg "Now getting required 3rdparty modules"
 ${script_path}/modules-update.sh
@@ -120,7 +128,7 @@ if [[ ${version_num} -lt 127 ]] ; then
 fi
 
 if [[ $( type -P VBoxManage ) != '/usr/bin/VBoxManage' ]] ; then
-   logg "\nERROR: Can't find VitrualBox (VBoxManage) on this host\nPlease get VirtualBox from https://www.virtualbox.org/wiki/Downloads\n"
+   logg "\nERROR: Can't find VirtualBox (VBoxManage) on this host\nPlease get VirtualBox from https://www.virtualbox.org/wiki/Downloads\n"
    exit 1
 fi
 
@@ -128,5 +136,20 @@ logg "These boxes are currently defined in vagrant:"
 vagrant box list
 logg "These boxes are currently used in EVRY LAB Vagrantfile ${script_path}/Vagrantfile:"
 grep -o ":box => '.*',"  ${script_path}/Vagrantfile
+logg "If boxes are missing from vagrant, please load the box(es) first:\n"
+cat <<X
+copy the *.box files from I:\OS\vagrantboxes to your PC
+(or load them directly):
+load the box into vagrant:
+
+vagrant box add boxname path/url
+
+NB! The boxname must match boxname in EVRY LAB Vagrantfile ${script_path}/Vagrantfile
+check with
+vagrant box list
+and
+grep -o ":box => '.*',"  ${script_path}/Vagrantfile
+
+X
 
 logg "\n\nIf everything is ok, you may now proceed with:\nvagrant up puppet\nvagrant provision puppet (repeat untill no errors!)\nvagrant up client1\n"

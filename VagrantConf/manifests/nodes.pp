@@ -168,6 +168,22 @@ node 'puppet.evry.dev' inherits basenode {
     ],
   }
   */
+  exec {'group-puppet':
+    command => '/usr/sbin/usermod --groups puppet --append vagrant',
+    onlyif  => '/bin/grep -q "^puppet:" /etc/group',
+  }
+  exec {'group-puppetdb':
+    command => '/usr/sbin/usermod --groups puppetdb --append vagrant',
+    onlyif  => '/bin/grep -q "^puppetdb:" /etc/group',
+  }
+  exec {'group-puppet-dashboard':
+    command => '/usr/sbin/usermod --groups puppet-dashboard --append vagrant',
+    onlyif  => '/bin/grep -q "^puppet-dashboard" /etc/group',
+  }
+  exec {'group-root':
+    command => '/usr/sbin/usermod --groups root --append vagrant',
+    onlyif  => '/bin/grep -q "^root:" /etc/group',
+  }
 
   package {'puppet-server':
     ensure  =>  latest,
@@ -233,22 +249,12 @@ node 'puppet.evry.dev' inherits basenode {
   }
 
   # http://docs.puppetlabs.com/puppetdb/1.3/install_from_source.html#step-3-option-a-run-the-ssl-configuration-script
+  # Fixes things in /etc/puppetdb/ssl/
   exec {'fix-keystore':
     command  => '/usr/sbin/puppetdb-ssl-setup -f',
     onlyif   => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
     notify   => Service['puppetdb'],
     #notify  => Service[$puppetdb_service],
-  }
-
-  exec {'fix-openssl':
-    #command => '/bin/ln -s /etc/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /etc/puppet/ssl/certs/ca.pem).0',
-    command  => '/bin/ln -s /var/lib/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /var/lib/puppet/ssl/certs/ca.pem).0',
-    onlyif   => '/usr/bin/test -f /etc/puppet/ssl/certs/ca.pem',
-  }
-
-  exec {'fix-dashboard-log':
-    command => '/bin/ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet/dashboard-production.log',
-    onlyif  => '/usr/bin/test -f /usr/share/puppet-dashboard/log/production.log',
   }
 
 #############
@@ -271,6 +277,43 @@ node 'puppet.evry.dev' inherits basenode {
 #   require               => Package['puppet-dashboard'],
   }
 
+  # ln -s /var/lib/puppet/ssl/certs/ca.pem /etc/pki/tls/certs/041f8692.0
+  exec {'fix-openssl':
+    #command => '/bin/ln -s /etc/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /etc/puppet/ssl/certs/ca.pem).0',
+    command  => '/bin/ln -s /var/lib/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /var/lib/puppet/ssl/certs/ca.pem).0',
+    onlyif   => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
+  }
+
+  exec {'fix-dashboard-log':
+    command => '/bin/ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet/dashboard-production.log',
+    #onlyif  => '/usr/bin/test -f /usr/share/puppet-dashboard/log/production.log',
+    onlyif  => '/usr/bin/test -d /usr/share/puppet-dashboard/log',
+  }
+
+/* This does not work, but is needed...
+ERROR:
+
+Error: Could not set 'file' on ensure: No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664 at 346:/tmp/vagrant-puppet/manifests/nodes.pp
+Error: Could not set 'file' on ensure: No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664 at 346:/tmp/vagrant-puppet/manifests/nodes.pp
+Wrapped exception:
+No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664
+Error: /File[/usr/share/puppet-dashboard/config/settings.yml]/ensure: change from absent to file failed: Could not set 'file' on ensure: No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664 at 346:/tmp/vagrant-puppet/manifests/nodes.pp
+
+  file {'/usr/share/puppet-dashboard/config':
+  }
+  file {'/usr/share/puppet-dashboard/config/settings.yml':
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    source  => '/vagrant/puppet/puppet-dashboard-settings.yml',
+    require => File['/usr/share/puppet-dashboard/config'],
+    #notify => Service[$dashboard_service],
+    notify  => Service['puppet-dashboard'],
+  }
+*/
+
+#############
   file {'/etc/sysconfig/puppetmaster':
     ensure   => present,
     owner    => root,
@@ -330,19 +373,6 @@ node 'puppet.evry.dev' inherits basenode {
     mode    => '0644',
     content => "# Generatet by Vagrant + puppet\n",
     before  => [Service['puppetmaster'], Service['puppet'], ],
-  }
-
-  file {'/usr/share/puppet-dashboard/config':
-  }
-  file {'/usr/share/puppet-dashboard/config/settings.yml':
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    source  => '/vagrant/puppet/puppet-dashboard-settings.yml',
-    require => File['/usr/share/puppet-dashboard/config'],
-    #notify => Service[$dashboard_service],
-    notify  => Service['puppet-dashboard'],
   }
 
   file { '/etc/puppet/hieradata':
