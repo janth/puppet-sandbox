@@ -291,6 +291,7 @@ node 'puppet.evry.dev' inherits basenode {
   }
 
 /* This does not work, but is needed...
+FIXME
 ERROR:
 
 Error: Could not set 'file' on ensure: No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664 at 346:/tmp/vagrant-puppet/manifests/nodes.pp
@@ -313,6 +314,15 @@ Error: /File[/usr/share/puppet-dashboard/config/settings.yml]/ensure: change fro
   }
 */
 
+/*
+TODO
+fix puppet-dashboard stop + start errors complaining about
+config.gem: Unpacked gem mocha-0.9.7 in vendor/gems has no specification file.
+Run 'rake gems:refresh_specs' to fix this.
+
+cd /usr/share/puppet-dashboard/vendor/gems ; rake gems:refresh_specs
+
+*/
 #############
   file {'/etc/sysconfig/puppetmaster':
     ensure   => present,
@@ -382,15 +392,3 @@ Error: /File[/usr/share/puppet-dashboard/config/settings.yml]/ensure: change fro
 
   #notify {'PuppetMaster setup on node puppet complete.':}
 }
-
-/*
-TODO
-fix puppet-dashboard stop + start errors complaining about
-config.gem: Unpacked gem mocha-0.9.7 in vendor/gems has no specification file.
-Run 'rake gems:refresh_specs' to fix this.
-
-cd /usr/share/puppet-dashboard/vendor/gems ; rake gems:refresh_specs
-
-puppet-dashboard-settings.yml
-
-*/
