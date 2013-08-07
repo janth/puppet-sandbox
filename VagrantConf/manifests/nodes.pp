@@ -112,7 +112,6 @@ node basenode inherits default {
     require => File['/var/log'],
   }
 
-
   file {'/var/log/puppetdb':
     ensure  => directory,
     owner   => puppetdb,
@@ -126,6 +125,7 @@ node basenode inherits default {
   exec {'chmod /var/log/puppet':
     command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppet ; /bin/chmod g+ws /var/log/puppet" ',
   }
+
   exec {'chmod /var/log/puppetdb':
     command   => '/bin/bash -c "/bin/chmod 775 /var/log/puppetdb ; /bin/chmod g+ws /var/log/puppetdb" ',
   }
@@ -200,7 +200,6 @@ node 'puppet.evry.dev' inherits basenode {
     require                => Package['puppet-server'],
     puppetdb_version       => latest,
   }
-#   java_args             => '{ '-Xmx'                 => '512m', '-Xms' => '256m' }
 
   # Configure the puppet master to use puppetdb
   class { 'puppetdb::master::config':
@@ -235,13 +234,21 @@ node 'puppet.evry.dev' inherits basenode {
 
   # http://docs.puppetlabs.com/puppetdb/1.3/install_from_source.html#step-3-option-a-run-the-ssl-configuration-script
   exec {'fix-keystore':
-    command => '/usr/sbin/puppetdb-ssl-setup -f',
-    onlyif => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
+    command  => '/usr/sbin/puppetdb-ssl-setup -f',
+    onlyif   => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
+    notify   => Service['puppetdb'],
+    #notify  => Service[$puppetdb_service],
   }
+
   exec {'fix-openssl':
-    #command => '/bin/ln -s /etc/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /etc/puppet/ssl/certs/ca.pem).0', 
+    #command => '/bin/ln -s /etc/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /etc/puppet/ssl/certs/ca.pem).0',
     command  => '/bin/ln -s /var/lib/puppet/ssl/certs/ca.pem $(openssl version -d|cut -d\" -f2)/certs/$(openssl x509 -hash -noout -in /var/lib/puppet/ssl/certs/ca.pem).0',
     onlyif   => '/usr/bin/test -f /etc/puppet/ssl/certs/ca.pem',
+  }
+
+  exec {'fix-dashboard-log':
+    command => '/bin/ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet/dashboard-production.log',
+    onlyif  => '/usr/bin/test -f /usr/share/puppet-dashboard/log/production.log',
   }
 
 #############
@@ -264,92 +271,40 @@ node 'puppet.evry.dev' inherits basenode {
 #   require               => Package['puppet-dashboard'],
   }
 
-/* Handled by class dashboard
-
-  package {'rubygem-rake':
-    ensure  =>  latest,
-  }
-
-  package {'mysql-server':
-    ensure  =>  latest,
-  }
-
-  package {'ruby-mysql':
-    ensure  =>  latest,
-  }
-
-  package {'puppet-dashboard':
-    ensure  => latest,
-    require => [
-          Host['puppet.evry.dev'],
-          Package['puppet-server'],
-          Package['rubygem-rake'],
-          #Package['mysql-server'],
-          #Package['ruby-mysql'],
-        ]
-  }
-*/
-
-  ##we copy rather than symlinking as puppet will manage this
-/*
-  file {'/etc/puppet/puppet.conf':
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    source  => '/vagrant/puppet/puppet-master.conf',
-    notify  => [Service['puppetmaster'],
-#       Service['puppet-dashboard'],
-#       Service['puppet-dashboard-workers']
-      ],
-    require => Package['puppet-server'],
-  }
-*/
-
   file {'/etc/sysconfig/puppetmaster':
     ensure   => present,
     owner    => root,
     group    => root,
     source   => '/vagrant/evry/puppetmaster',
-    #notify  => Service['puppetmaster'],
+    notify   => Service['puppetmaster'],
     require  => Package['puppet-server'],
   }
 
   file {'/etc/puppet/autosign.conf':
-    ensure  => link,
+    ensure  => present,
     owner   => root,
     group   => root,
     mode    => '0644',
     source  => '/vagrant/puppet/autosign.conf',
-    notify  => [Service['puppetmaster'],
-        Service['puppet'],
-#       Service['puppet-dashboard'],
-#       Service['puppet-dashboard-workers']
-  ],
+    notify  => [Service['puppetmaster'], Service['puppet'], ],
     require => Package['puppet-server'],
   }
 
   file {'/etc/puppet/auth.conf':
-    ensure  => link,
+    ensure  => present,
     owner   => root,
     group   => root,
     source  => '/vagrant/puppet/auth.conf',
-    notify  => [Service['puppetmaster'],
-#       Service['puppet-dashboard'],
-#       Service['puppet-dashboard-workers']
-  ],
+    notify  => [Service['puppetmaster'], ],
     require => Package['puppet-server'],
   }
 
   file {'/etc/puppet/fileserver.conf':
-    ensure  => link,
+    ensure  => present,
     owner   => root,
     group   => root,
     source  => '/vagrant/puppet/fileserver.conf',
-    notify  => [Service['puppetmaster'],
-        Service['puppet'],
-#       Service['puppet-dashboard'],
-#       Service['puppet-dashboard-workers']
-  ],
+    notify  => [Service['puppetmaster'], Service['puppet'], ],
     require => Package['puppet-server'],
   }
 
@@ -359,15 +314,35 @@ node 'puppet.evry.dev' inherits basenode {
   }
 
   file { '/etc/puppet/hiera.yaml':
-    ensure => link,
+    ensure => present,
     owner  => root,
     group  => root,
     source => '/vagrant/puppet/hiera.yaml',
-    notify => [Service['puppetmaster'],
-        Service['puppet'],
-#       Service['puppet-dashboard'],
-#       Service['puppet-dashboard-workers']
-  ],
+    notify => [Service['puppetmaster'], Service['puppet'], ],
+    before => [Service['puppetmaster'], Service['puppet'], ],
+  }
+
+  file {'/var/lib/hiera/common.yaml':
+    ensure  => present,
+    replace => 'no',
+    owner   => 'puppet',
+    group   => 'puppet',
+    mode    => '0644',
+    content => "# Generatet by Vagrant + puppet\n",
+    before  => [Service['puppetmaster'], Service['puppet'], ],
+  }
+
+  file {'/usr/share/puppet-dashboard/config':
+  }
+  file {'/usr/share/puppet-dashboard/config/settings.yml':
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    source  => '/vagrant/puppet/puppet-dashboard-settings.yml',
+    require => File['/usr/share/puppet-dashboard/config'],
+    #notify => Service[$dashboard_service],
+    notify  => Service['puppet-dashboard'],
   }
 
   file { '/etc/puppet/hieradata':
@@ -380,12 +355,12 @@ node 'puppet.evry.dev' inherits basenode {
 
 /*
 TODO
-fix puppet-dashboard stop + start errors complaining about 
+fix puppet-dashboard stop + start errors complaining about
 config.gem: Unpacked gem mocha-0.9.7 in vendor/gems has no specification file.
 Run 'rake gems:refresh_specs' to fix this.
 
 cd /usr/share/puppet-dashboard/vendor/gems ; rake gems:refresh_specs
 
+puppet-dashboard-settings.yml
 
-ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet
 */
