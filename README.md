@@ -36,12 +36,26 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
    " Required: Let Vundle manage Vundle 
    Bundle 'gmarik/vundle'
    Bundle 'rodjek/vim-puppet'
+   Bundle 'scrooloose/syntastic'
    filetype plugin indent on     " required!
    ```
 
 4. `vim +BundleInstall +qall`
 
 Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppetto/
+
+
+### Lab GUI mm
+* Dashboard: http://172.16.10.10:300/
+* PuppetDB: http://172.16.10.10:8080/
+* CLI spørringer:
+    sudo puppet agent --test
+    curl -k -H "Accept: yaml" https://puppet:8140/production/facts/puppet.evry.dev
+    curl -H "Accept: application/json" http://puppet:8080/v2/facts/puppet.evry.dev
+    curl -H "Accept: application/json" http://puppet:8080/v2/metrics/mbean/java.lang:type=Memory
+
+### Logger
+    tail -f /var/log/puppet*/* /usr/share/puppet-dashboard/log/*
 
 ### Testing
 * puppet-lint site/site.pp

@@ -32,7 +32,7 @@ logg () {
    echo -e "\033[33;1m[${tstamp}] ${script_name}\033[0m: ${1}"
 }
 
-for service in iptables puppet puppetmaster puppet-dashboard puppetdb puppetqueue mysqld postgresql ; do 
+for service in iptables puppet puppetmaster puppet-dashboard puppet-dashboard-workers puppetdb puppetqueue mysqld postgresql ; do 
    logg "service ${service} /etc/init.d/${service} status:"
    sudo /etc/init.d/${service} status
    echo

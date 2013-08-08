@@ -34,6 +34,9 @@ nodes = [
   { :hostname => 'client2', :ip => '172.16.10.12', :box => 'CentOS-6.4', :ram => 224 },
 ]
 
+# Solaris:
+# config.vm.guest => ':solaris'
+
 Vagrant.configure("2") do |config|
   nodes.each do |node|
     config.vm.define node[:hostname] do |node_config|
@@ -71,8 +74,8 @@ Vagrant.configure("2") do |config|
         puppet.module_path    = [ "VagrantConf/modules.local", "VagrantConf/modules" ]
         #puppet.options        = "--verbose --hiera_config hiera_vagrant.yaml %s" % DEBUG
         #puppet.options        = "--verbose %s" % DEBUG
-        #puppet.options        = "--verbose --debug"
-        puppet.options        = "--verbose"
+        puppet.options        = "--verbose --debug"
+        #puppet.options        = "--verbose"
         puppet.facter = {
            "is_vagrant" => true,
         }

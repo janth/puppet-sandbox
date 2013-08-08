@@ -202,19 +202,20 @@ node 'puppet.evry.dev' inherits basenode {
   # Configure puppetdb and its underlying database
   # NOTE Must run sudo /usr/sbin/puppetdb-ssl-setup
   class { 'puppetdb':
-    database               => 'postgres',
-    database_name          => 'puppetdb',
-    database_password      => 'puppetdb',
-    listen_address         => '0.0.0.0',
-    listen_port            => '8080',
-    ssl_listen_address     => '0.0.0.0',
-    ssl_listen_port        => '8081',
-    disable_ssl            => false,
-    open_ssl_listen_port   => false,
-    open_listen_port       => false,
-    open_postgres_port     => false,
-    require                => Package['puppet-server'],
-    puppetdb_version       => latest,
+    database             => 'postgres',
+    database_name        => 'puppetdb',
+    database_password    => 'puppetdb',
+    listen_address       => '0.0.0.0',
+    listen_port          => '8080',
+    ssl_listen_address   => '0.0.0.0',
+    ssl_listen_port      => '8081',
+    disable_ssl          => false,
+    open_ssl_listen_port => false,
+    open_listen_port     => false,
+    open_postgres_port   => false,
+#   require              => Package['puppet-server'],
+    require              => Service['puppetmaster'],
+    puppetdb_version     => latest,
   }
 
   # Configure the puppet master to use puppetdb
@@ -268,9 +269,9 @@ node 'puppet.evry.dev' inherits basenode {
 #   dashboard_user        => 'puppet-dashboard',
 #   dashboard_group       => 'puppet-dashboard',
 #   dashboard_password    => 'changeme',
-#   dashboard_db          => 'dashboard_production',
+#   dashboard_db          => 'dashboard_development',
 #   dashboard_charset     => 'utf8',
-#   dashboard_environment => 'production',
+#   dashboard_environment => 'development',
 #   passenger             => false,
 #   mysql_root_pw         => 'changemetoo',
 #   rails_base_uri        => '/',
@@ -284,10 +285,19 @@ node 'puppet.evry.dev' inherits basenode {
     onlyif   => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
   }
 
-  exec {'fix-dashboard-log':
+  exec {'fix-dashboard-log-1':
     command => '/bin/ln -s /usr/share/puppet-dashboard/log/production.log /var/log/puppet/dashboard-production.log',
     #onlyif  => '/usr/bin/test -f /usr/share/puppet-dashboard/log/production.log',
     onlyif  => '/usr/bin/test -d /usr/share/puppet-dashboard/log',
+  }
+  exec {'fix-dashboard-log-2':
+    command => '/bin/ln -s /usr/share/puppet-dashboard/log/development.log /var/log/puppet/dashboard-development.log',
+    #onlyif  => '/usr/bin/test -f /usr/share/puppet-dashboard/log/production.log',
+    onlyif  => '/usr/bin/test -d /usr/share/puppet-dashboard/log',
+  }
+  service {'puppet-dashboard-workers':
+    ensure => running,
+    enable => true,
   }
 
 /* This does not work, but is needed...
@@ -300,19 +310,26 @@ Wrapped exception:
 No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664
 Error: /File[/usr/share/puppet-dashboard/config/settings.yml]/ensure: change from absent to file failed: Could not set 'file' on ensure: No such file or directory - /usr/share/puppet-dashboard/config/settings.yml.puppettmp_7664 at 346:/tmp/vagrant-puppet/manifests/nodes.pp
 
+Og en siste ting må gjøres manuelt:
+
+sudo cp /vagrant/puppet/puppet-dashboard-settings.yml
+/usr/share/puppet-dashboard/config/settings.yml
+
+sudo service puppet-dashboard restart
+
   file {'/usr/share/puppet-dashboard/config':
   }
+*/
   file {'/usr/share/puppet-dashboard/config/settings.yml':
     ensure  => present,
     owner   => root,
     group   => root,
     mode    => '0644',
     source  => '/vagrant/puppet/puppet-dashboard-settings.yml',
-    require => File['/usr/share/puppet-dashboard/config'],
+    #require => File['/usr/share/puppet-dashboard/config'],
     #notify => Service[$dashboard_service],
     notify  => Service['puppet-dashboard'],
   }
-*/
 
 /*
 TODO
@@ -388,6 +405,21 @@ cd /usr/share/puppet-dashboard/vendor/gems ; rake gems:refresh_specs
   file { '/etc/puppet/hieradata':
     mode    => '0644',
     recurse => true,
+  }
+#############
+  file { '/usr/local/bin/puppet-status.sh':
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0755',
+    source => '/vagrant/puppet-status.sh',
+  }
+  file { '/usr/local/bin/Tail.sh':
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0755',
+    source => '/vagrant/Tail.sh',
   }
 
   #notify {'PuppetMaster setup on node puppet complete.':}
