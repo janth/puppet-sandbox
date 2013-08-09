@@ -26,6 +26,15 @@ Dette lab-oppstettet lager 3 stk virtualbox VMer ved hjelp av Vagrant; 2 linux o
 **NB!** Laben er utviklet på PC med linux som hoved-os, og derfor kun testet der.
 Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både Virtualbox, Vagrant og Git skal være mulig å installere på Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
 
+### Kom i gang
+1. Installer [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. Installer [Vagrant](http://downloads.vagrantup.com/)
+3. Installer [Git](http://git-scm.com/downloads) (eller for linux: ```sudo yum install git``` / ```sudo apt-get install git```
+4. Lag en egen lab katalog
+5. Klon dette prosjektet: ```git clone https://github.com/janth/vagrant.git```
+6a. Hvis PCen din kjører linux: ```1stSetup.sh```
+
+
 ### Puppet Editor ([vim](http://www.vim.org)/[Eclipse](http://eclipse.org/))
 To valg:
 * *Enten* https://github.com/rodjek/vim-puppet (har bedre keyword farging)
