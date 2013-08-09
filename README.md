@@ -3,28 +3,26 @@
 Author: Jan Thomas
 
 ## Om puppet
-
-[Puppet Labs](http://puppetlabs.com/) - The Company behind Puppet
-
-[Puppet](http://puppetlabs.com/puppet/puppet-open-source/) - The OpenSource version
-
-[Puppet Enterprise](http://puppetlabs.com/puppet/puppet-enterprise/)- The commercial version
-
-[The Community](http://puppetlabs.com/community/overview/)- Active and vibrant
-
-[Documentation](http://docs.puppetlabs.com/) - Main and Official reference
-
-Puppet Modules: [Module Forge](http://forge.puppetlabs.com), [GitHub](https://github.com/search?q=puppet)
-
+[Puppet Labs](http://puppetlabs.com/) - The Company behind Puppet  
+[Puppet](http://puppetlabs.com/puppet/puppet-open-source/) - The OpenSource version  
+[Puppet Enterprise](http://puppetlabs.com/puppet/puppet-enterprise/)- The commercial version  
+[The Community](http://puppetlabs.com/community/overview/)- Active and vibrant  
+[Documentation](http://docs.puppetlabs.com/) - Main and Official reference  
+Puppet Modules: [Module Forge](http://forge.puppetlabs.com), [GitHub](https://github.com/search?q=puppet)  
 _MEN NB!_ Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme på [wikien](http://212.18.136.81/wiki/dashboard.action)
 
 #### Related programvare
-* <a href="http://docs.puppetlabs.com/mcollective/">MCollective</a> - Infrastructure Orchestration framework<br /> <a href="http://docs.puppetlabs.com/hiera/1/">Hiera</a> - Key-value lookup tool where <abbr title="Puppet automation tool">Puppet</abbr> data can be placed<br /> <a href="http://docs.puppetlabs.com/puppetdb/1/">PuppetDB</a> - An Inventory Service and StoredConfigs backend<br /> <a href="http://docs.puppetlabs.com/dashboard/"><abbr title="Puppet automation tool">Puppet</abbr> DashBoard</a> - A <abbr title="Puppet automation tool">Puppet</abbr> <em>Web frontend</em> and External Node Classifier (ENC)<br /> <a href="http://theforeman.org/">The Foreman</a> - A well-known third party provisioning tool and <abbr title="Puppet automation tool">Puppet</abbr> ENC<br /> <a href="http://cloudsmith.github.com/geppetto">Geppetto</a> - A <abbr title="Puppet automation tool">Puppet</abbr> IDE based on Eclipse</p>
+[MCollective](http://docs.puppetlabs.com/mcollective/) - Infrastructure Orchestration framework  
+[Hiera](http://docs.puppetlabs.com/hiera/1/) - Key-value lookup tool where Puppet data can be placed  
+[PuppetDB](http://docs.puppetlabs.com/puppetdb/1/) - An Inventory Service and StoredConfigs backend  
+[Puppet DashBoard](http://docs.puppetlabs.com/dashboard/) - A Puppet Web frontend and External Node Classifier (ENC)  
+[The Foreman](http://theforeman.org/) - A well-known third party provisioning tool and Puppet ENC  
+[Geppetto](http://cloudsmith.github.com/geppetto) - A Puppet IDE based on Eclipse
 
 ## Om Lab'en (Linux/Windows)
 Dette lab-oppstettet lager 3 stk virtualbox VMer ved hjelp av Vagrant; 2 linux og en solaris11. Den ene linuxen blir satt opp som puppetmaster med dashboard og puppetdb. Den andre linuxen og solaris11 er tenk som klienter.
 
-*NB!* Laben er utviklet på PC med linux som hoved-os, og derfor kun testet der.
+**NB!** Laben er utviklet på PC med linux som hoved-os, og derfor kun testet der.
 Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både Virtualbox, Vagrant og Git skal være mulig å installere på Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
 
 ### Puppet Editor (vim/Eclipse)
