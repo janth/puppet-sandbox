@@ -4,24 +4,27 @@ Author: Jan Thomas
 
 ## Om puppet
 
-<a href="http://puppetlabs.com"><abbr title="Puppet automation tool">Puppet</abbr> Labs</a> - The Company behind <abbr title="Puppet automation tool">Puppet</abbr></p>
-<a href="http://puppetlabs.com/puppet/puppet-open-source/"><abbr title="Puppet automation tool">Puppet</abbr></a> - The OpenSource version</p>
-<a href="http://puppetlabs.com/puppet/puppet-enterprise/"><abbr title="Puppet automation tool">Puppet</abbr> Enterprise</a> - The commercial version</p>
-<a href="http://puppetlabs.com/community/overview/">The Community</a> - Active and vibrant</p>
-<a href="http://docs.puppetlabs.com/"><abbr title="Puppet automation tool">Puppet</abbr> Documentation</a> - Main and Official reference</p>
-<abbr title="Puppet automation tool">Puppet</abbr> Modules on: <a href="http://forge.puppetlabs.com">Module Forge</a> and <a href="https://github.com/search?q=puppet">GitHub</a></p>
-Software related to <abbr title="Puppet automation tool">Puppet</abbr>:<br />
+[Puppet Labs](http://puppetlabs.com/) - The Company behind Puppet
+[Puppet](http://puppetlabs.com/puppet/puppet-open-source/) - The OpenSource version
+[Puppet Enterprise](http://puppetlabs.com/puppet/puppet-enterprise/)- The commercial version
+[The Community](http://puppetlabs.com/community/overview/)- Active and vibrant
+[Documentation](http://docs.puppetlabs.com/) - Main and Official reference
+Puppet Modules: [Module Forge](http://forge.puppetlabs.com), [GitHub](https://github.com/search?q=puppet)
+*MEN NB!* Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme på [wikien](http://212.18.136.81/wiki/dashboard.action)
+
+#### Related programvare
 * <a href="http://docs.puppetlabs.com/mcollective/">MCollective</a> - Infrastructure Orchestration framework<br /> <a href="http://docs.puppetlabs.com/hiera/1/">Hiera</a> - Key-value lookup tool where <abbr title="Puppet automation tool">Puppet</abbr> data can be placed<br /> <a href="http://docs.puppetlabs.com/puppetdb/1/">PuppetDB</a> - An Inventory Service and StoredConfigs backend<br /> <a href="http://docs.puppetlabs.com/dashboard/"><abbr title="Puppet automation tool">Puppet</abbr> DashBoard</a> - A <abbr title="Puppet automation tool">Puppet</abbr> <em>Web frontend</em> and External Node Classifier (ENC)<br /> <a href="http://theforeman.org/">The Foreman</a> - A well-known third party provisioning tool and <abbr title="Puppet automation tool">Puppet</abbr> ENC<br /> <a href="http://cloudsmith.github.com/geppetto">Geppetto</a> - A <abbr title="Puppet automation tool">Puppet</abbr> IDE based on Eclipse</p>
 
+## Om Lab'en (Linux/Windows)
+Dette lab-oppstettet lager 3 stk virtualbox VMer ved hjelp av Vagrant; 2 linux og en solaris11. Den ene linuxen blir satt opp som puppetmaster med dashboard og puppetdb. Den andre linuxen og solaris11 er tenk som klienter.
 
-http://www.puppetcookbook.com/posts/add-a-unix-group.html
+*NB!* Laben er utviklet på PC med linux som hoved-os, og derfor kun testet der.
+Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både Virtualbox, Vagrant og Git skal være mulig å installere på Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
 
-### Puppet + vim
+### Puppet Editor (vim/Eclipse)
 To valg:
-* Enten hent http://downloads.puppetlabs.com/puppet/puppet.vim og legg i din ~/.vim/syntax
-* Eller https://github.com/rodjek/vim-puppet (har bedre keyword farging)
-som er enklest hvis en bruker vim bundle/vundle/pathogen: 
- 0. (Valgfritt) les mer på https://github.com/gmarik/vundle
+* *Enten* https://github.com/rodjek/vim-puppet (har bedre keyword farging)
+som er enklest hvis en bruker vim [bundle/vundle/pathogen](https://github.com/gmarik/vundle): 
  1. git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
  2. vim ~/.vimrc
  3. legg til følgende:
@@ -36,11 +39,18 @@ som er enklest hvis en bruker vim bundle/vundle/pathogen:
    " Required: Let Vundle manage Vundle 
    Bundle 'gmarik/vundle'
    Bundle 'rodjek/vim-puppet'
+   Bundle 'godlygeek/tabular'
    Bundle 'scrooloose/syntastic'
+   " SnipMate + vim-snippets
+   Bundle 'MarcWeber/vim-addon-mw-utils'
+   Bundle 'tomtom/tlib_vim'
+   Bundle 'garbas/vim-snipmate'
+   Bundle 'honza/vim-snippets'
    filetype plugin indent on     " required!
    ```
+4. last inn `vim +BundleInstall +qall`
 
-4. `vim +BundleInstall +qall`
+* *Eller* hent http://downloads.puppetlabs.com/puppet/puppet.vim og legg i din ~/.vim/syntax
 
 Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppetto/
 
@@ -54,10 +64,10 @@ Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppet
     curl -H "Accept: application/json" http://puppet:8080/v2/facts/puppet.evry.dev
     curl -H "Accept: application/json" http://puppet:8080/v2/metrics/mbean/java.lang:type=Memory
 
-### Logger
+### Logger (på puppetmaster puppet.evry.dev)
     tail -f /var/log/puppet*/* /usr/share/puppet-dashboard/log/*
 
-### Testing
+### Validering av puppetkode
 * puppet-lint site/site.pp
 * puppet apply --noop --verbose site/site.pp
 
