@@ -27,13 +27,42 @@ Dette lab-oppstettet lager 3 stk virtualbox VMer ved hjelp av Vagrant; 2 linux o
 Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både Virtualbox, Vagrant og Git skal være mulig å installere på Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
 
 ### Kom i gang
+0. Sjekk at du har en PC som oppfyller kravene:
+   * Diskplass:
+   * RAM: 
 1. Installer [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Installer [Vagrant](http://downloads.vagrantup.com/)
 3. Installer [Git](http://git-scm.com/downloads) (eller for linux: ```sudo yum install git``` / ```sudo apt-get install git```
 4. Lag en egen lab katalog
 5. Klon dette prosjektet: ```git clone https://github.com/janth/vagrant.git```
-6. Kjør vagrant...
-   * Hvis PCen din kjører linux: ```1stSetup.sh```
+
+Hvis du kjører windows:
+6. Legg følgende i din ```/etc/hosts``` / ```%SystemRoot%\system32\drivers\etc\hosts```
+   ```
+   172.16.10.10   puppet.evry.dev   puppet pm
+   172.16.10.11   client1.evry.dev  client1 c1
+   172.16.10.12   client2.evry.dev  client2 c2
+   ```
+6. Legg vagrant box ssh-rsa key i din ssh config: https://github.com/mitchellh/vagrant/tree/master/keys
+   TBD
+6. Oppdater modulene som brukes for å sette opp lab'en  
+   TBD
+
+* Hvis PCen din kjører linux:
+7. Kjør vagrant...
+   
+   ```bash
+   # Denne fikser de manuelle stegene for windows automatisk! ;->
+   1stSetup.sh 
+
+   vagrant up puppet
+   vagrant provision puppet
+   vagrant up client1
+   vagrant up client2
+   ```
+
+8. Sjekk dashboard (http://172.16.10.10:3000/), du skal se 3 noder (ja, puppetmaster puppet (aka puppet.evry.dev) er node av seg selv)
+9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice
 
 
 ### Puppet Editor ([vim](http://www.vim.org)/[Eclipse](http://eclipse.org/))

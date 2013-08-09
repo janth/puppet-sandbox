@@ -138,7 +138,7 @@ logg "These boxes are currently used in EVRY LAB Vagrantfile ${script_path}/Vagr
 grep -o ":box => '.*',"  ${script_path}/Vagrantfile
 logg "If boxes are missing from vagrant, please load the box(es) first:\n"
 cat <<X
-copy the *.box files from I:\OS\vagrantboxes to your PC
+copy the *.box files from http://212.18.136.81/vagrant/boxes/ to your PC
 (or load them directly):
 load the box into vagrant:
 

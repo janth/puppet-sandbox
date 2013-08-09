@@ -25,23 +25,21 @@
 
 # ENV['VAGRANT_LOG'] = 'debug' # Does not work, probably too late anyway
 domain = 'evry.dev'
-box_url = "~/EVRY/Boxes/centos-6.4.box"
-el_base_box = 'CentOS-6.4'
+#box_url = "~/EVRY/Boxes/centos-6.4.box"
+# http://212.18.136.81/vagrant/boxes/ or I:\OS\vagrantboxes
 
 nodes = [
-  { :hostname => 'puppet',  :ip => '172.16.10.10', :box => 'CentOS-6.4', :ram => 384 },
-  { :hostname => 'client1', :ip => '172.16.10.11', :box => 'CentOS-6.4', :ram => 224 },
-  { :hostname => 'client2', :ip => '172.16.10.12', :box => 'CentOS-6.4', :ram => 224 },
+  { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'CentOS-6.4', :osclass => ':linux',   :uri => 'http://212.18.136.81/vagrant/boxes/centos-6.4.box' },
+  { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'CentOS-6.4', :osclass => ':linux',   :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-OracleLinux-6.4-x86_64.box' },
+  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 224, :box => 'CentOS-6.4', :osclass => ':solaris', :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-Solaris-11.1-64bit__2013-07-26-13-12.box' },
 ]
-
-# Solaris:
-# config.vm.guest => ':solaris'
 
 Vagrant.configure("2") do |config|
   nodes.each do |node|
     config.vm.define node[:hostname] do |node_config|
       node_config.vm.box = node[:box]
-      #node_config.vm.box_url = box_url
+      node_config.vm.box_url = node[:uri]
+      node_config.vm.guest = node[:osclass]
       node_config.vm.hostname = node[:hostname] + '.' + domain
       node_config.vm.network :private_network, ip: node[:ip]
 
