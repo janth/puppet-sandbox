@@ -36,7 +36,9 @@ Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både 
 4. Lag en egen lab katalog
 5. Klon dette prosjektet: ```git clone https://github.com/janth/vagrant.git```
 
+
 Hvis du kjører windows:
+
 6. Legg følgende i din ```/etc/hosts``` / ```%SystemRoot%\system32\drivers\etc\hosts```
    ```
    172.16.10.10   puppet.evry.dev   puppet pm
@@ -48,7 +50,8 @@ Hvis du kjører windows:
 6. Oppdater modulene som brukes for å sette opp lab'en  
    TBD
 
-* Hvis PCen din kjører linux:
+
+Hvis PCen din kjører linux:
 7. Kjør vagrant...
    
    ```bash
