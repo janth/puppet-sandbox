@@ -62,7 +62,7 @@ Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppet
 
 
 ### Lab GUI mm
-* Dashboard: http://172.16.10.10:300/
+* Dashboard: http://172.16.10.10:3000/
 * PuppetDB: http://172.16.10.10:8080/
 * CLI spørringer:
     sudo puppet agent --test
