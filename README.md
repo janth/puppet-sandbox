@@ -52,6 +52,7 @@ Hvis du kjører windows:
 
 
 Hvis PCen din kjører linux:
+
 7. Kjør vagrant...
    
    ```bash
@@ -63,6 +64,8 @@ Hvis PCen din kjører linux:
    vagrant up client1
    vagrant up client2
    ```
+
+Deretter...
 
 8. Sjekk dashboard (http://172.16.10.10:3000/), du skal se 3 noder (ja, puppetmaster puppet (aka puppet.evry.dev) er node av seg selv)
 9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice
