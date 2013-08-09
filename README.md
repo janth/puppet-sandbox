@@ -5,12 +5,18 @@ Author: Jan Thomas
 ## Om puppet
 
 [Puppet Labs](http://puppetlabs.com/) - The Company behind Puppet
+
 [Puppet](http://puppetlabs.com/puppet/puppet-open-source/) - The OpenSource version
+
 [Puppet Enterprise](http://puppetlabs.com/puppet/puppet-enterprise/)- The commercial version
+
 [The Community](http://puppetlabs.com/community/overview/)- Active and vibrant
+
 [Documentation](http://docs.puppetlabs.com/) - Main and Official reference
+
 Puppet Modules: [Module Forge](http://forge.puppetlabs.com), [GitHub](https://github.com/search?q=puppet)
-*MEN NB!* Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme på [wikien](http://212.18.136.81/wiki/dashboard.action)
+
+_MEN NB!_ Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme på [wikien](http://212.18.136.81/wiki/dashboard.action)
 
 #### Related programvare
 * <a href="http://docs.puppetlabs.com/mcollective/">MCollective</a> - Infrastructure Orchestration framework<br /> <a href="http://docs.puppetlabs.com/hiera/1/">Hiera</a> - Key-value lookup tool where <abbr title="Puppet automation tool">Puppet</abbr> data can be placed<br /> <a href="http://docs.puppetlabs.com/puppetdb/1/">PuppetDB</a> - An Inventory Service and StoredConfigs backend<br /> <a href="http://docs.puppetlabs.com/dashboard/"><abbr title="Puppet automation tool">Puppet</abbr> DashBoard</a> - A <abbr title="Puppet automation tool">Puppet</abbr> <em>Web frontend</em> and External Node Classifier (ENC)<br /> <a href="http://theforeman.org/">The Foreman</a> - A well-known third party provisioning tool and <abbr title="Puppet automation tool">Puppet</abbr> ENC<br /> <a href="http://cloudsmith.github.com/geppetto">Geppetto</a> - A <abbr title="Puppet automation tool">Puppet</abbr> IDE based on Eclipse</p>
