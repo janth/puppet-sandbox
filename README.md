@@ -37,14 +37,14 @@ Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både 
    |---------|------:|
    | ~/vagrant.d (holds the .box files) | ~2.6G |
    | ~/VirtualBox VMs (holds the Virtualbox machines) | ~ |
-   
+ 
    VM maks disk (de er laget med en tynn vmdk diskfil, dvs filen vokser etterhvert som mer og mer installeres i VMen):
 
    | puppet |  4G |
    |--------|----:|
    | client1 | 20G |
    | client2 | 30G |
-   
+
    * RAM: Du bør ha 2G RAM ledig for å kjøre alle 3 lab-boxene.
    Detaljer (dette kan overstyres i Vagrantfile):
 
