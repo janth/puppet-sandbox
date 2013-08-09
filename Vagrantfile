@@ -11,7 +11,8 @@
 #####
 
 # Notes:
-# MultiVM: https://gist.github.com/dlutzy/2469037
+# Puppet+Dashboard+PuppetDb: https://github.com/grahamgilbert/vagrant-puppetmaster
+# Compact/rubycode MultiVM config: https://gist.github.com/dlutzy/2469037
 # http://kiennt.com/blog/2012/06/28/using-vagrant-to-setup-multiple-virtual-machie.html
 # https://github.com/patrickdlee/vagrant-examples
 # https://github.com/mitchellh/vagrant/issues/1693
@@ -20,8 +21,9 @@
 # http://stackoverflow.com/questions/13065576/override-vagrant-configuration-settings-locally-per-dev
 # https://github.com/grahamgilbert/vagrant-puppetmaster
 # https://github.com/puppetlabs/puppet-vagrant-boxes
+# https://github.com/fsalum/vagrant-puppet
 #
-# https://github.com/grahamgilbert/vagrant-puppetmaster
+
 
 # ENV['VAGRANT_LOG'] = 'debug' # Does not work, probably too late anyway
 domain = 'evry.dev'
@@ -29,13 +31,14 @@ domain = 'evry.dev'
 # http://212.18.136.81/vagrant/boxes/ or I:\OS\vagrantboxes
 
 nodes = [
-  { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'CentOS-6.4', :osclass => ':linux',   :uri => 'http://212.18.136.81/vagrant/boxes/centos-6.4.box' },
-  { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'CentOS-6.4', :osclass => ':linux',   :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-OracleLinux-6.4-x86_64.box' },
-  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 224, :box => 'CentOS-6.4', :osclass => ':solaris', :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-Solaris-11.1-64bit__2013-07-26-13-12.box' },
+  { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'CentOS-6.4-32bit', :osclass => 'redhat',  :uri => 'http://212.18.136.81/vagrant/boxes/centos-6.4.box' },
+  { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'OEL-6.4-x86_64',   :osclass => 'redhat',  :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-OracleLinux-6.4-x86_64.box' },
+  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 512, :box => 'Sol11-11.1',       :osclass => 'solaris', :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-Solaris-11.1-64bit__2013-07-26-13-12.box' },
 ]
 
 Vagrant.configure("2") do |config|
   nodes.each do |node|
+    guest_os = node[:osclass] ? node[:osclass] : ':linux';
     config.vm.define node[:hostname] do |node_config|
       node_config.vm.box = node[:box]
       node_config.vm.box_url = node[:uri]
@@ -108,16 +111,6 @@ X
 
 
 ### links
-* MultiVM: https://gist.github.com/dlutzy/2469037
-* http://kiennt.com/blog/2012/06/28/using-vagrant-to-setup-multiple-virtual-machie.html
-* https://github.com/patrickdlee/vagrant-examples
-* https://github.com/mitchellh/vagrant/issues/1693
-* https://github.com/grahamgilbert/vagrant-puppetmaster
-* https://github.com/puppetlabs/puppet-vagrant-boxes
-* http://stackoverflow.com/questions/13065576/override-vagrant-configuration-settings-locally-per-dev
-* https://github.com/grahamgilbert/vagrant-puppetmaster
-* https://github.com/puppetlabs/puppet-vagrant-boxes
-* https://github.com/fsalum/vagrant-puppet
 
 
 require './evryvagrant.rb'

@@ -28,8 +28,24 @@ Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både 
 
 ### Kom i gang
 0. Sjekk at du har en PC som oppfyller kravene:
-   * Diskplass:
-   * RAM: 
+   * PC: Kapabel til å kjøre 64bits programvare (linux: sjekk [linux-bits](https://raw.github.com/janth/cos/master/linux-bits.sh))  
+     **NB!** Husk å installere 64-bits versjon av programmene under!!!
+   * Diskplass: Minimum ~10G
+   Detaljer:
+   | .../lab | ~50Mb |
+   | ~/vagrant.d (holds the .box files) | ~2.6G |
+   | ~/VirtualBox VMs (holds the Virtualbox machines) | ~ |
+   VM maks disk (de er laget med en tynn vmdk diskfil, dvs filen vokser etterhvert som mer og mer installeres i VMen):
+   | puppet |  4G |
+   | client1 | 20G |
+   | client2 | 30G |
+   * RAM: Du bør ha 2G RAM ledig for å kjøre alle 3 lab-boxene.
+   Detaljer (dette kan overstyres i Vagrantfile):
+   | puppet |  384M |
+   | client1 | 224M |
+   | client2 | 512M |
+   * Nett: *NB!* Det anbefales å kjøre på EVRY kontornett kabel pga store mengder data som skal lastes første gang.  
+     (Deretter kan en faktisk kjøre helt uten nett, da det brukes internt Virutalbox nettverk. Men da kommer yum install til å feile, pga edbnett proxy...)
 1. Installer [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Installer [Vagrant](http://downloads.vagrantup.com/)
 3. Installer [Git](http://git-scm.com/downloads) (eller for linux: ```sudo yum install git``` / ```sudo apt-get install git```
@@ -46,9 +62,9 @@ Hvis du kjører windows:
    172.16.10.12   client2.evry.dev  client2 c2
    ```
 6. Legg vagrant box ssh-rsa key i din ssh config: https://github.com/mitchellh/vagrant/tree/master/keys
-   TBD
+   TBD...
 6. Oppdater modulene som brukes for å sette opp lab'en  
-   TBD
+   TBD...
 
 
 Hvis PCen din kjører linux:
@@ -68,8 +84,19 @@ Hvis PCen din kjører linux:
 Deretter...
 
 8. Sjekk dashboard (http://172.16.10.10:3000/), du skal se 3 noder (ja, puppetmaster puppet (aka puppet.evry.dev) er node av seg selv)
-9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice
-
+9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice TBD...
+10. Ved dagens slutt:
+   * Husk å lagre alle filer, commit kode til ditt repo, push til origin
+   * La VMene hvile:
+   ```bash
+   vagrant suspend client1
+   vagrant suspend client2
+   ```
+11. Neste dag:
+   ```bash
+   vagrant resume client1
+   vagrant resume client2
+   ```
 
 ### Puppet Editor ([vim](http://www.vim.org)/[Eclipse](http://eclipse.org/))
 To valg:
