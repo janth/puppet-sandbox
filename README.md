@@ -32,7 +32,8 @@ Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både 
 3. Installer [Git](http://git-scm.com/downloads) (eller for linux: ```sudo yum install git``` / ```sudo apt-get install git```
 4. Lag en egen lab katalog
 5. Klon dette prosjektet: ```git clone https://github.com/janth/vagrant.git```
-6a. Hvis PCen din kjører linux: ```1stSetup.sh```
+6. Kjør vagrant...
+   * Hvis PCen din kjører linux: ```1stSetup.sh```
 
 
 ### Puppet Editor ([vim](http://www.vim.org)/[Eclipse](http://eclipse.org/))
