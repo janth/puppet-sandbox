@@ -1,5 +1,6 @@
 *~
 *.sw?
+.aliases
 
 .librarian/
 .tmp/

@@ -1,6 +1,0 @@
-
-host 172.16.10.* pm puppetmaster c1 c2 client1 client2
-   User vagrant
-   IdentityFile /home/et2441/.ssh/vagrant
-   ForwardX11 no
-

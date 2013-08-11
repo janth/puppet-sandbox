@@ -40,21 +40,21 @@ Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både 
  
    VM maks disk (de er laget med en tynn vmdk diskfil, dvs filen vokser etterhvert som mer og mer installeres i VMen):
 
-   | puppet |  4G |
+   | VM |  Max disk |
    |--------|----:|
+   | puppet |  4G |
    | client1 | 20G |
    | client2 | 30G |
 
    * RAM: Du bør ha 2G RAM ledig for å kjøre alle 3 lab-boxene.
    Detaljer (dette kan overstyres i Vagrantfile):
 
-   | puppet |  384M |
+   | VM |  RAM |
    |--------|----:|
+   | puppet |  384M |
    | client1 | 224M |
    | client2 | 512M |
 
-   * Nett: *NB!* Det anbefales å kjøre på EVRY kontornett kabel pga store mengder data som skal lastes første gang.  
-     (Deretter kan en faktisk kjøre helt uten nett, da det brukes internt Virutalbox nettverk. Men da kommer yum install til å feile, pga edbnett proxy...)
 1. Installer [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Installer [Vagrant](http://downloads.vagrantup.com/)
 3. Installer [Git](http://git-scm.com/downloads) (eller for linux: ```sudo yum install git``` / ```sudo apt-get install git```
@@ -82,7 +82,7 @@ Hvis PCen din kjører linux:
    
    ```bash
    # Denne fikser de manuelle stegene for windows automatisk! ;->
-   1stSetup.sh 
+   bin/1stSetup.sh 
 
    vagrant up puppet
    vagrant provision puppet
@@ -162,11 +162,3 @@ Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppet
 * Bruk alltid siste versjon av vagrant: http://downloads.vagrantup.com/
 * Installer puppet: http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html
 * Installer puppet-lint: http://puppet-lint.com/
-* Installer zsh: http://zsh.sourceforge.net/
-   http://www.masterzen.fr/2009/04/19/in-love-with-zsh-part-one/
-   http://grml.org/zsh/zsh-lovers.html
-   http://zshwiki.org/home/
-   http://www.slideshare.net/jaguardesignstudio/why-zsh-is-cooler-than-your-shell-16194692
-   http://fendrich.se/blog/2012/09/28/no/
-* Installer oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh og http://www.stevendobbelaere.be/installing-and-configuring-the-oh-my-zsh-shell/
-* grml-zsh: http://grml.org/zsh/
