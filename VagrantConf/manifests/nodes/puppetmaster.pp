@@ -1,5 +1,4 @@
-
-#node 'puppet.evry.dev' inherits basenode {
+node 'puppet.evry.dev' inherits basenode {
   notify {'JTM: file nodes/puppetmaster.pp':}
   user { 'vagrant':
     ensure     => present,
@@ -120,4 +119,4 @@
     mode    => '0644',
     recurse => true,
   }
-  #}
+}

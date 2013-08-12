@@ -1,11 +1,12 @@
 # vim:ft=ruby:sw=2:foldmethod=syntax:foldlevel=9
 
 domain = 'evry.dev'
+boxes = 'http://212.18.136.81/vagrant/boxes/'
 
 nodes = [
-  { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'centos-6.4', :osclass => 'redhat',  :uri => 'http://212.18.136.81/vagrant/boxes/centos-6.4.box' },
-  { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'vagrant-OracleLinux-6.4-x86_64',   :osclass => 'redhat',  :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-OracleLinux-6.4-x86_64.box' },
-  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 512, :box => 'vagrant-Solaris-11.1-64bit__2013-07-26-13-12',       :osclass => 'solaris', :uri => 'http://212.18.136.81/vagrant/boxes/vagrant-Solaris-11.1-64bit__2013-07-26-13-12.box' },
+  { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'vagrant-OracleLinux-6.4-x86_64', :osclass => 'redhat'},
+  { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'vagrant-OracleLinux-6.4-x86_64', :osclass => 'redhat' },
+  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 512, :box => 'vagrant-Solaris-11.1-64bit__2013-07-26-13-12', :osclass => 'solaris' },
 ]
 
 Vagrant.configure("2") do |config|
@@ -13,7 +14,7 @@ Vagrant.configure("2") do |config|
     guest_os = node[:osclass] ? node[:osclass] : ':linux';
     config.vm.define node[:hostname] do |node_config|
       node_config.vm.box = node[:box]
-      node_config.vm.box_url = node[:uri]
+      node_config.vm.box_url = boxes + node[:box] + '.box'
       node_config.vm.guest = node[:osclass]
       node_config.vm.hostname = node[:hostname] + '.' + domain
       node_config.vm.network :private_network, ip: node[:ip]

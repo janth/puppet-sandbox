@@ -49,12 +49,12 @@ progs_missing=0
 [[ $( type -P curl ) = '/usr/bin/curl' ]] && got_curl=1
 [[ $( type -P wget ) = '/usr/bin/wget' ]] && got_wget=1
 
-if [[ $( type -P git ) != '/usr/bin/git' ]] ; then
+if [[ $( type -P git ) == '' ]] ; then
    logg "\nERROR: Can't find git on this host\nPlease get git from http://git-scm.com/downloads/ (or use sudo yum or apt-get install git)\n"
    progs_missing=$((progs_missing + 1))
 fi
 
-if [[ $( type -P vagrant ) != '/usr/bin/vagrant' ]] ; then
+if [[ $( type -P vagrant ) == '' ]] ; then
    logg "ERROR: Can't find vagrant on this host\nPlease get vagrant from http://downloads.vagrantup.com/"
    progs_missing=$((progs_missing + 1))
 else 
@@ -65,14 +65,14 @@ else
    fi
 fi
 
-if [[ $( type -P VBoxManage ) != '/usr/bin/VBoxManage' ]] ; then
+if [[ $( type -P VBoxManage ) == '' ]] ; then
    logg "ERROR: Can't find VirtualBox (VBoxManage) on this host\nPlease get VirtualBox from https://www.virtualbox.org/wiki/Downloads"
    progs_missing=$((progs_missing + 1))
 fi
-if [[ $( type -P puppet ) == '/usr/bin/puppet' ]] ; then
-   got_puppet=1
-else
+if [[ $( type -P puppet ) == '' ]] ; then
    logg "WARNING: Can't find puppet on this host\nIf you want to install puppet, use the instructions on http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html\n"
+else
+   got_puppet=1
 fi
 if [[ ${progs_missing} -gt 0 ]] ; then
    logg "One or more errors detected. Please correct and the re-run ${script_name}\n"
@@ -128,7 +128,7 @@ fi
 grep -q '^host 172.16.10.* pm puppetmaster c1 c2 client1 client2' $HOME/.ssh/config
 if [[ $? -ne 0 ]] ; then
    logg "\nPlease add this to your ~/.ssh/config for easy ssh-access to the lab-boxes:\n(content from ${script_path}/addme-ssh-config):\n\n"
-   cat ${script_path}/addme-ssh-config
+   cat ${script_path}/addme-ssh-config | sed "s/\$USER/$USER/"
    echo -e "\n"
 else logg "\~/.ssh/config OK"
 fi
