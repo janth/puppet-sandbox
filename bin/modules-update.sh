@@ -74,6 +74,9 @@ while read -a line ; do
 
 done < ${list}
 
+test -x ${script_basedir}/patch-modules.sh && \
+  ${script_basedir}/patch-modules.sh $${moduledir}
+
  : << X
 
 mkdir -p modules hieradata/nodes site/sitelib
