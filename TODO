@@ -1,9 +1,3 @@
 In no particular priority or order:
 * Fix sol11 box
-* Fix start of puppet-dashboard-workers service
-* Fix  /usr/share/puppet-dashboard/config/settings.yml
-   # http://docs.puppetlabs.com/dashboard/manual/1.2/configuring.html#enabling-inventory-support
-   # The "inventory service" allows you to connect to a puppet master to retrieve and node facts
-   enable_inventory_service: true
-
 

@@ -10,7 +10,8 @@ git://github.com/ripienaar/puppet-concat.git                   concat
 #git://github.com/puppetlabs/puppetlabs-stdlib.git              stdlib             6f9361e383
 git://github.com/puppetlabs/puppetlabs-stdlib.git              stdlib
 
-git://github.com/puppetlabs/puppetlabs-dashboard.git           dashboard
+#git://github.com/puppetlabs/puppetlabs-dashboard.git           dashboard
+git://github.com/bjorges/puppetlabs-dashboard.git           dashboard
 
 #git://github.com/dhoppe/puppet-hosts                           hosts
 

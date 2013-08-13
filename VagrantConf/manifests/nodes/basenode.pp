@@ -1,7 +1,7 @@
 node default {}
 
 node basenode {
-  notify {'JTM: file nodes/basenode.pp':}
+  notify {'EVRY: file nodes/basenode.pp':}
   # Set up the Puppet Labs Yum package repo on EL/Fedora repo, basically just
   # mimics the puppetlabs-release rpm
   include puppetlabs_yum

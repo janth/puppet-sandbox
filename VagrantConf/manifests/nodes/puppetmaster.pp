@@ -1,5 +1,5 @@
 node 'puppet.evry.dev' inherits basenode {
-  notify {'JTM: file nodes/puppetmaster.pp':}
+  notify {'EVRY: file nodes/puppetmaster.pp':}
   user { 'vagrant':
     ensure     => present,
     groups     => ['puppet', 'puppetdb', 'puppet-dashboard'],
@@ -50,7 +50,6 @@ node 'puppet.evry.dev' inherits basenode {
     onlyif   => '/usr/bin/test -f /var/lib/puppet/ssl/certs/ca.pem',
     notify   => Service['puppetdb'],
     require  => Service['puppetmaster'],
-    #notify  => Service[$puppetdb_service],
   }
 
 
@@ -62,14 +61,6 @@ node 'puppet.evry.dev' inherits basenode {
     dashboard_port   => '3000',
   }
 
-/*
-  # This really should'nt be necessary!!! And besides, it doesn't work! Really!
-  service {'puppet-dashboard-workers':
-    ensure => running,
-    enable => true,
-  }
-*/
-
 
 #############
   file {'/etc/puppet/autosign.conf':
@@ -78,7 +69,7 @@ node 'puppet.evry.dev' inherits basenode {
     group   => root,
     mode    => '0644',
     source  => '/vagrant/puppet/autosign.conf',
-    notify  => [Service['puppetmaster'], Service['puppet'], ],
+    notify  => [Service['puppetmaster'],Service['puppet-dashboard'],Service['puppet-dashboard-workers']],
     require => Package['puppet-server'],
   }
 
@@ -87,7 +78,7 @@ node 'puppet.evry.dev' inherits basenode {
     owner   => root,
     group   => root,
     source  => '/vagrant/puppet/auth.conf',
-    notify  => [Service['puppetmaster'], ],
+    notify  => [Service['puppetmaster'],Service['puppet-dashboard'],Service['puppet-dashboard-workers']],
     require => Package['puppet-server'],
   }
 
@@ -96,7 +87,7 @@ node 'puppet.evry.dev' inherits basenode {
     owner   => root,
     group   => root,
     source  => '/vagrant/puppet/fileserver.conf',
-    notify  => [Service['puppetmaster'], Service['puppet'], ],
+    notify  => [Service['puppetmaster'],Service['puppet-dashboard'],Service['puppet-dashboard-workers']],
     require => Package['puppet-server'],
   }
 
@@ -106,8 +97,7 @@ node 'puppet.evry.dev' inherits basenode {
     owner  => root,
     group  => root,
     source => '/vagrant/puppet/hiera.yaml',
-    notify => [Service['puppetmaster'], Service['puppet'], ],
-    before => [Service['puppetmaster'], Service['puppet'], ],
+    notify  => [Service['puppetmaster'],Service['puppet-dashboard'],Service['puppet-dashboard-workers']],
   }
 
   file {'/etc/puppet/modules':
@@ -118,5 +108,35 @@ node 'puppet.evry.dev' inherits basenode {
   file { '/etc/puppet/hieradata':
     mode    => '0644',
     recurse => true,
+  }
+
+  file {'/usr/share/puppet-dashboard/config/settings.yml':
+    ensure  => link,
+    owner   => puppet-dashboard,
+    group   => puppet-dashboard,
+    source  => '/vagrant/puppet/dashboard-settings.yml',
+    require => [File['/vagrant/puppet/dashboard-settings.yml'],File['/usr/share/puppet-dashboard/config']],
+    notify  => [Service['puppetmaster'],Service['puppet-dashboard'],Service['puppet-dashboard-workers']],
+  }
+
+  file {'/vagrant/puppet/dashboard-settings.yml':
+    owner => puppet-dashboard,
+    group => puppet-dashboard,
+    mode  => '0640',
+  }
+
+  file {'/usr/share/puppet-dashboard/config':
+    ensure  => directory,
+    owner   => puppet-dashboard,
+    group   => puppet-dashboard,
+    mode    => 755,
+    require => File['/usr/share/puppet-dashboard'],
+  }
+
+  file {'/usr/share/puppet-dashboard':
+    ensure => directory,
+    owner  => root,
+    group  => root,
+    mode   => 755,
   }
 }
