@@ -10,7 +10,7 @@ Author: Jan Thomas
 [Documentation](http://docs.puppetlabs.com/) - Main and Official reference  
 [PDF Docs](http://puppetlabs.com/misc/pdf-doc/) - For download and offline access
 Puppet Modules: [Module Forge](http://forge.puppetlabs.com), [GitHub](https://github.com/search?q=puppet)  
-_MEN NB!_ Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme pÃ¥ [wikien](http://212.18.136.81/wiki/dashboard.action)
+_MEN NB!_ Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil komme på [wikien](http://212.18.136.81/wiki/display/MV/Puppet)
 
 #### Related programvare
 [MCollective](http://docs.puppetlabs.com/mcollective/) - Infrastructure Orchestration framework  
@@ -23,13 +23,13 @@ _MEN NB!_ Vi skal bruke minst mulig av de. Offisiell velsignet modulliste vil ko
 ## Om Lab'en (Linux/Windows)
 Dette lab-oppstettet lager 3 stk virtualbox VMer ved hjelp av Vagrant; 2 linux og en solaris11. Den ene linuxen blir satt opp som puppetmaster med dashboard og puppetdb. Den andre linuxen og solaris11 er tenk som klienter.
 
-**NB!** Laben er utviklet pÃ¥ PC med linux som hoved-os, og derfor kun testet der.
-Har du __windows pÃ¥ din PC__, er det nytt farvann og ukjent terreng, men bÃ¥de Virtualbox, Vagrant og Git skal vÃ¦re mulig Ã¥ installere pÃ¥ Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
+**NB!** Laben er utviklet på PC med linux som hoved-os, og derfor kun testet der.
+Har du __windows på din PC__, er det nytt farvann og ukjent terreng, men både Virtualbox, Vagrant og Git skal være mulig å installere på Windows. Se feks http://guides.beanstalkapp.com/version-control/git-on-windows.html for instruksjoner.
 
 ### Kom i gang
 0. Sjekk at du har en PC som oppfyller kravene:
-   * PC: Kapabel til Ã¥ kjÃ¸re 64bits programvare (linux: sjekk [linux-bits](https://raw.github.com/janth/cos/master/linux-bits.sh))  
-     **NB!** Husk Ã¥ installere 64-bits versjon av programmene under!!!
+   * PC: Kapabel til å kjøre 64bits programvare (linux: sjekk [linux-bits](https://raw.github.com/janth/cos/master/linux-bits.sh))  
+     **NB!** Husk å installere 64-bits versjon av programmene under!!!
    * Diskplass: Minimum ~10G
    Detaljer:
 
@@ -46,7 +46,7 @@ Har du __windows pÃ¥ din PC__, er det nytt farvann og ukjent terreng, men bÃ¥de 
    | client1 | 20G |
    | client2 | 30G |
 
-   * RAM: Du bÃ¸r ha 2G RAM ledig for Ã¥ kjÃ¸re alle 3 lab-boxene.
+   * RAM: Du bør ha 2G RAM ledig for å kjøre alle 3 lab-boxene.
    Detaljer (dette kan overstyres i Vagrantfile):
 
    | VM |  RAM |
@@ -62,9 +62,9 @@ Har du __windows pÃ¥ din PC__, er det nytt farvann og ukjent terreng, men bÃ¥de 
 5. Klon dette prosjektet: ```git clone https://github.com/janth/vagrant.git```
 
 
-Hvis du kjÃ¸rer windows:
+Hvis du kjører windows:
 
-6. Legg fÃ¸lgende i din ```/etc/hosts``` / ```%SystemRoot%\system32\drivers\etc\hosts```
+6. Legg følgende i din ```/etc/hosts``` / ```%SystemRoot%\system32\drivers\etc\hosts```
    ```
    172.16.10.10   puppet.evry.dev   puppet pm
    172.16.10.11   client1.evry.dev  client1 c1
@@ -72,13 +72,13 @@ Hvis du kjÃ¸rer windows:
    ```
 6. Legg vagrant box ssh-rsa key i din ssh config: https://github.com/mitchellh/vagrant/tree/master/keys
    TBD...
-6. Oppdater modulene som brukes for Ã¥ sette opp lab'en  
+6. Oppdater modulene som brukes for å sette opp lab'en  
    TBD...
 
 
-Hvis PCen din kjÃ¸rer linux:
+Hvis PCen din kjører linux:
 
-7. KjÃ¸r vagrant...
+7. Kjør vagrant...
    
    ```bash
    # Denne fikser de manuelle stegene for windows automatisk! ;->
@@ -93,9 +93,9 @@ Hvis PCen din kjÃ¸rer linux:
 Deretter...
 
 8. Sjekk dashboard (http://172.16.10.10:3000/), du skal se 3 noder (ja, puppetmaster puppet (aka puppet.evry.dev) er node av seg selv)
-9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice TBD...
+9. Skriv puppetkode. **NB!** Se wiki for EVRY 8D44 Puppet Best Practice (http://212.18.136.81/wiki/display/MV/Puppet)
 10. Ved dagens slutt:
-   * Husk Ã¥ lagre alle filer, commit kode til ditt repo, push til origin
+   * Husk å lagre alle filer, commit kode til ditt repo, push til origin
    * La VMene hvile:
    ```bash
    vagrant suspend client1
@@ -113,7 +113,7 @@ To valg:
 som er enklest hvis en bruker vim [bundle/vundle/pathogen](https://github.com/gmarik/vundle): 
  1. git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
  2. vim ~/.vimrc
- 3. legg til fÃ¸lgende:
+ 3. legg til følgende:
 
    ```vim
    set nocompatible               " be iMproved
@@ -145,13 +145,13 @@ Alternativ editor: Geppetto (Eclipse plugin): http://cloudsmith.github.io/geppet
 ### Lab GUI mm
 * Dashboard: http://172.16.10.10:3000/
 * PuppetDB: http://172.16.10.10:8080/
-* CLI spÃ¸rringer:
+* CLI spørringer:
     sudo puppet agent --test
     curl -k -H "Accept: yaml" https://puppet:8140/production/facts/puppet.evry.dev
     curl -H "Accept: application/json" http://puppet:8080/v2/facts/puppet.evry.dev
     curl -H "Accept: application/json" http://puppet:8080/v2/metrics/mbean/java.lang:type=Memory
 
-### Logger (pÃ¥ puppetmaster puppet.evry.dev)
+### Logger (på puppetmaster puppet.evry.dev)
     tail -f /var/log/puppet*/* /usr/share/puppet-dashboard/log/*
 
 ### Validering av puppetkode
