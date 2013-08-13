@@ -1,3 +1,28 @@
 In no particular priority or order:
-* Fix sol11 box
 
+* VagrantConf/manifest/nodes/basenode.pp
+   Do NOT install puppet on solaris, only gives 'ERROR: rpm not found'...
+   Likewise, drop other linux spesific stuff
+   => convert to proper classes
+
+* Fix sol11 box
+   FIXED: New guest/os type: solaris11, defined in plugins/guests/solaris11
+   Need to fork+pull https://github.com/mitchellh/vagrant
+   => need to rename janth/vagrant to something appropriate... puppet_sandbox?
+
+* BLUG session?
+
+
+
+Not very likely (ie fun stuff, but ...):
+
+* Fix vagrant logging
+
+* Fix vagrant url + box timestamp check (to detect updated box-urls...)
+
+* Test other vagrant providers
+   AWS: https://github.com/mitchellh/vagrant-aws
+   KVM: https://github.com/adrahon/vagrant-kvm
+   LXC: https://github.com/fgrehm/vagrant-lxc
+
+* write vagrant solariszone provider
