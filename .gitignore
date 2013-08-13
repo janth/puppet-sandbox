@@ -8,6 +8,6 @@
 
 Puppetfile.lock
 
-VagrantConf/modules/
+VagrantConf/modules/*
 
 Doc/puppet_labs_docs_pdfs.zip
