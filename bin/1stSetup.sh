@@ -128,7 +128,10 @@ fi
 grep -q '^host 172.16.10.* pm puppetmaster c1 c2 client1 client2' $HOME/.ssh/config
 if [[ $? -ne 0 ]] ; then
    logg "\nPlease add this to your ~/.ssh/config for easy ssh-access to the lab-boxes:\n(content from ${script_path}/addme-ssh-config):\n\n"
-   cat ${script_path}/addme-ssh-config | sed "s/\$USER/$USER/"
+   #cat ${script_path}/addme-ssh-config | sed "s/\$USER/$USER/"
+   while read line ; do
+      eval echo "${line}"
+   done < ${script_path}/addme-ssh-config
    echo -e "\n"
 else logg "\~/.ssh/config OK"
 fi
