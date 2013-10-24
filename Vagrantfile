@@ -6,7 +6,7 @@ boxes = 'http://212.18.136.81/vagrant/boxes/'
 nodes = [
   { :hostname => 'puppet',  :ip => '172.16.10.10', :ram => 384, :box => 'vagrant-OracleLinux-6.4-x86_64', :osclass => 'redhat'},
   { :hostname => 'client1', :ip => '172.16.10.11', :ram => 224, :box => 'vagrant-OracleLinux-6.4-x86_64', :osclass => 'redhat' },
-  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 512, :box => 'vagrant-Solaris-11.1-64bit__2013-07-26-13-12', :osclass => 'solaris' },
+  { :hostname => 'client2', :ip => '172.16.10.12', :ram => 512, :box => 'vagrant-Solaris-11.1-64bit__2013-07-26-13-12', :osclass => 'solaris11' },
 ]
 
 Vagrant.configure("2") do |config|
